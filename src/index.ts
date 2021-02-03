@@ -72,7 +72,7 @@ async function start(): Promise<void> {
       return decoded
     },
   })
-  const port = process.env.PORT ? process.env.PORT : 4000
+  const port = process.env.PORT ? process.env.PORT : 5000
   await server.listen(port)
   console.log(`GRAPHQL SERVER STARTED -> http://localhost:${port}/graphql`)
 }
