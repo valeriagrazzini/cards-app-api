@@ -57,6 +57,8 @@ async function start(): Promise<void> {
 
   // APOLLO SERVER CREATION
   const server = new ApolloServer({
+    introspection: true,
+    playground: true,
     schema,
     context: ({ req }): any => {
       let token = req.headers.authorization
