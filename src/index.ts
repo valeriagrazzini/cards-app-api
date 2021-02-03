@@ -34,7 +34,7 @@ async function start(): Promise<void> {
     })
     .catch((error) => console.log(error))
 
-  // SET CONFIGURATIONS
+  // SET CONFIGURATIONS ..
   Container.get(CardService).setConfiguration(configuration)
   Container.get(CardTradeRequestService).setConfiguration(configuration)
 
