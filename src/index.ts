@@ -34,7 +34,7 @@ async function start(): Promise<void> {
     })
     .catch((error) => console.log(error))
 
-  // SET CONFIGURATIONS
+  // SET CONFIGURATIONS ..
   Container.get(CardService).setConfiguration(configuration)
   Container.get(CardTradeRequestService).setConfiguration(configuration)
 
@@ -57,6 +57,8 @@ async function start(): Promise<void> {
 
   // APOLLO SERVER CREATION
   const server = new ApolloServer({
+    introspection: true,
+    playground: true,
     schema,
     context: ({ req }): any => {
       let token = req.headers.authorization
@@ -70,7 +72,7 @@ async function start(): Promise<void> {
       return decoded
     },
   })
-  const port = 4035
+  const port = process.env.PORT ? process.env.PORT : 5000
   await server.listen(port)
   console.log(`GRAPHQL SERVER STARTED -> http://localhost:${port}/graphql`)
 }

@@ -1,6 +1,6 @@
 {
   "name": "cards",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "trading cards app",
   "main": "index.ts",
   "dependencies": {
@@ -37,6 +37,8 @@
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec ts-node src/index.ts",
     "test": "test",
+    "build": "tsc --build",
+    "postinstall": "npm run build",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
