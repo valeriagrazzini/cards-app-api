@@ -1,10 +1,16 @@
 {
     "type": "postgres",
-    "host": "localhost",
+    "host": "ec2-54-170-100-209.eu-west-1.compute.amazonaws.com",
     "port": 5432,
-    "username": "postgres",
-    "password":"postgres",
-    "database": "cardsApp",
+    "username": "clexxkgesulhhr",
+    "password":"326a1008745f352259f482139ef27fa091d5f3d03580cdc32428f9360c5b803d",
+    "database": "db277ajtm5e353",
     "synchronize": true,
-    "logging": false
+    "logging": false,
+    "ssl": true,
+    "extra": {
+      "ssl": {
+        "rejectUnauthorized": false
+      }
+    }
   }
