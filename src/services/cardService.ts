@@ -4,11 +4,10 @@ import { BaseModelService } from './baseModelService'
 
 @Service()
 export class CardService {
-  private _picturePath!: string
-  private modelName: 'Card'
+  private modelName = 'Card'
 
   public setConfiguration(configuration: { cardPicturesPath: string }): void {
-    this._picturePath = configuration.cardPicturesPath
+    //...
   }
 
   async findOne(id: number): Promise<Card | undefined> {
@@ -22,19 +21,13 @@ export class CardService {
   }
 
   async create(data: CardCreateInput): Promise<Card> {
-    const pictureUrl = this._picturePath + '/' + data.pictureName
-    const card = await Container.get(BaseModelService).create<Card>(this.modelName, { ...data, pictureUrl })
+    const card = await Container.get(BaseModelService).create<Card>(this.modelName, { ...data })
     return card
   }
 
   async update(data: CardUpdateInput): Promise<Card> {
-    let pictureUrl = undefined
-    if (data.pictureName) {
-      pictureUrl = this._picturePath + '/' + data.pictureName
-    }
-
     data.id = +data.id
-    const card = await Container.get(BaseModelService).create<Card>(this.modelName, { ...data, pictureUrl })
+    const card = await Container.get(BaseModelService).create<Card>(this.modelName, { ...data })
     return card
   }
 

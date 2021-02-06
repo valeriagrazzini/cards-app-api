@@ -52,7 +52,7 @@ export class CardCreateInput {
   name!: string
 
   @Field({ nullable: true })
-  pictureName?: string
+  pictureUrl?: string
 
   @Field(() => ID)
   setId!: number
@@ -76,7 +76,7 @@ export class CardUpdateInput extends BaseUpdateInput {
   name?: string
 
   @Field({ nullable: true })
-  pictureName?: string
+  pictureUrl?: string
 
   @Field(() => ID, { nullable: true })
   setId?: number

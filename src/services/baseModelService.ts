@@ -15,6 +15,7 @@ export class BaseModelService {
   }
 
   async create<TModel>(modelName: string, data: any): Promise<TModel> {
+    console.log(modelName)
     return await getRepository<TModel>(modelName).save(data)
   }
 
