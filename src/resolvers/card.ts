@@ -1,8 +1,8 @@
 import { CardService } from '../services/cardService'
-import { Resolver, Query, Arg, ID, Mutation } from 'type-graphql'
+import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root } from 'type-graphql'
 import { Inject, Service } from 'typedi'
 import { Card, CardCreateInput, CardFilterInput, CardUpdateInput } from '../models/card'
-
+import { Set } from '../models/set'
 @Service()
 @Resolver(Card)
 export class CardResolver {
@@ -42,5 +42,10 @@ export class CardResolver {
   async deleteCard(@Arg('id', () => ID) id: number): Promise<boolean> {
     const card = await this.cardService.delete(id)
     return card
+  }
+
+  @FieldResolver(() => Set)
+  async set(@Root() card: Card): Promise<Set> {
+    return await card.set
   }
 }

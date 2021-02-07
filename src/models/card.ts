@@ -16,6 +16,10 @@ export class Card extends BaseEntity {
   @Column({ nullable: true })
   pictureUrl?: string
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  pictureThumbUrl?: string
+
   @Field(() => ID)
   @Column('int')
   setId!: number
@@ -24,7 +28,7 @@ export class Card extends BaseEntity {
     onDelete: 'CASCADE',
     eager: false,
   })
-  set!: Set
+  set!: Promise<Set>
 
   @Field(() => Int)
   @Column({ default: 1 })
@@ -54,6 +58,9 @@ export class CardCreateInput {
   @Field({ nullable: true })
   pictureUrl?: string
 
+  @Field({ nullable: true })
+  pictureThumbUrl?: string
+
   @Field(() => ID)
   setId!: number
 
@@ -77,6 +84,9 @@ export class CardUpdateInput extends BaseUpdateInput {
 
   @Field({ nullable: true })
   pictureUrl?: string
+
+  @Field({ nullable: true })
+  pictureThumbUrl?: string
 
   @Field(() => ID, { nullable: true })
   setId?: number
