@@ -1,5 +1,5 @@
-import { ObjectType, Field, InputType, ID, Int } from 'type-graphql'
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
+import { ObjectType, Field, InputType, ID } from 'type-graphql'
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
 import { Card } from './card'
 import { CardTradeRequest } from './cardTradeRequest'
 import { User } from './user'
@@ -19,29 +19,21 @@ export class UserCardTradeProposal extends BaseEntity {
   })
   user!: User
 
-  @Field(() => ID)
-  @Column('int')
-  cardProposalId!: number
+  @ManyToMany(() => Card, { eager: false, cascade: true, onDelete: 'SET NULL' })
+  @JoinTable({
+    name: 'userCardTradeProposalsOffered_cards',
+    joinColumns: [{ name: 'userCardTradeProposalId' }],
+    inverseJoinColumns: [{ name: 'cardId' }],
+  })
+  cardsOffered?: Promise<Card[]>
 
-  @Field(() => Int)
-  @Column('int', { default: 1 })
-  cardProposalQuantity!: number
-
-  @Field(() => ID)
-  @Column('int')
-  cardRequestId!: number
-
-  @Field(() => Int)
-  @Column('int', { default: 1 })
-  cardRequestQuantity!: number
-
-  @ManyToOne(() => Card)
-  @JoinColumn({ name: 'cardProposalId' })
-  cardProposal!: Promise<Card>
-
-  @ManyToOne(() => Card)
-  @JoinColumn({ name: 'cardRequestId' })
-  cardRequest!: Promise<Card>
+  @ManyToMany(() => Card, { eager: false, cascade: true, onDelete: 'SET NULL' })
+  @JoinTable({
+    name: 'userCardTradeProposalsRequested_cards',
+    joinColumns: [{ name: 'userCardTradeProposalId' }],
+    inverseJoinColumns: [{ name: 'cardId' }],
+  })
+  cardsRequested?: Promise<Card[]>
 
   @OneToMany(() => CardTradeRequest, (cardTradeRequest) => cardTradeRequest.userCardTradeProposal)
   tradeRequests!: Promise<CardTradeRequest[]>
@@ -52,17 +44,11 @@ export class UserCardTradeProposalCreateInput {
   @Field(() => ID)
   userId!: number
 
-  @Field(() => ID)
-  cardProposalId!: number
+  @Field(() => [ID])
+  cardsOfferedIds!: number[]
 
-  @Field(() => Int, { nullable: true })
-  cardProposalQuantity?: number
-
-  @Field(() => ID)
-  cardRequestId!: number
-
-  @Field(() => Int, { nullable: true })
-  cardRequestQuantity?: number
+  @Field(() => [ID])
+  cardsRequestedIds!: number[]
 }
 
 @InputType()
@@ -70,17 +56,11 @@ export class UserCardTradeProposalUpdateInput extends BaseUpdateInput {
   @Field(() => ID, { nullable: true })
   userId?: number
 
-  @Field(() => ID, { nullable: true })
-  cardProposalId?: number
+  @Field(() => [ID], { nullable: true })
+  cardsOfferedIds?: number[]
 
-  @Field(() => Int, { nullable: true })
-  cardProposalQuantity?: number
-
-  @Field(() => ID, { nullable: true })
-  cardRequestId?: number
-
-  @Field(() => Int, { nullable: true })
-  cardRequestQuantity?: number
+  @Field(() => [ID], { nullable: true })
+  cardsRequestedIds?: number[]
 }
 
 @InputType()

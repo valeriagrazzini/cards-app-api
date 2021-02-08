@@ -14,8 +14,6 @@ import { CardService } from './services/cardService'
 import { CardLocalizationResolver } from './resolvers/cardLocalization'
 import { UserResolver } from './resolvers/user'
 import { UserCardTradeProposalResolver } from './resolvers/userCardTradeProposal'
-import { CardTradeRequestResolver } from './resolvers/cardTradeRequest'
-import { CardTradeRequestService } from './services/cardTradeRequestService'
 import { UserCardToDonateResolver } from './resolvers/userCardToDonate'
 import jwt from 'jsonwebtoken'
 require('dotenv').config()
@@ -36,7 +34,6 @@ async function start(): Promise<void> {
 
   // SET CONFIGURATIONS ..
   Container.get(CardService).setConfiguration(configuration)
-  Container.get(CardTradeRequestService).setConfiguration(configuration)
 
   // GRAPHQL SCHEMA CREATION
   const schema = await buildSchema({
@@ -47,7 +44,6 @@ async function start(): Promise<void> {
       CardLocalizationResolver,
       UserResolver,
       UserCardTradeProposalResolver,
-      CardTradeRequestResolver,
       UserCardToDonateResolver,
     ],
     authChecker,

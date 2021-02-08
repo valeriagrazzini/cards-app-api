@@ -3,10 +3,10 @@ import { UserI } from '@/auth/user.interface'
 import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { UserCardTradeProposal } from './userCardTradeProposal'
-import { CardTradeRequest } from './cardTradeRequest'
 import { BaseEntity } from './_baseEntity'
 import { BaseUpdateInput, BaseFilterInput } from './_baseInputTypes'
 import { UserCardToDonate } from './userCardToDonate'
+import { CardTradeRequest } from './cardTradeRequest'
 
 @ObjectType()
 @Entity('users')

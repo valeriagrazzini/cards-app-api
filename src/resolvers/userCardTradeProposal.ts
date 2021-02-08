@@ -56,13 +56,15 @@ export class UserCardTradeProposalResolver {
     return card
   }
 
-  @FieldResolver(() => Card)
-  async cardProposal(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card> {
-    return await userCardTradeProposal.cardProposal
+  @FieldResolver(() => [Card])
+  async cardsOffered(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card[]> {
+    const cardsOffered = await userCardTradeProposal.cardsOffered
+    return cardsOffered ? cardsOffered : []
   }
 
-  @FieldResolver(() => Card)
-  async cardRequest(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card> {
-    return await userCardTradeProposal.cardRequest
+  @FieldResolver(() => [Card])
+  async cardsRequested(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card[]> {
+    const cardsRequested = await userCardTradeProposal.cardsRequested
+    return cardsRequested ? cardsRequested : []
   }
 }
