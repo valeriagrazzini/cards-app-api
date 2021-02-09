@@ -1,7 +1,7 @@
 import { UserService } from '../services/userService'
-import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root } from 'type-graphql'
+import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root, Int } from 'type-graphql'
 import { Inject, Service } from 'typedi'
-import { User, UserCreateInput, UserFilterInput, UserUpdateInput } from '../models/user'
+import { User, UserCreateInput, UserFilterInput, UserPaginatedResult, UserUpdateInput } from '../models/user'
 import { UserCardTradeProposal } from '../models/userCardTradeProposal'
 import { UserCardToDonate } from '../models/userCardToDonate'
 
@@ -20,9 +20,20 @@ export class UserResolver {
 
   //@Authorized()
   @Query(() => [User])
-  async users(@Arg('data', () => UserFilterInput, { nullable: true }) data?: UserFilterInput): Promise<User[]> {
-    const users = await this.userService.findAll(data)
+  async users(@Arg('filters', () => UserFilterInput, { nullable: true }) filters?: UserFilterInput): Promise<User[]> {
+    const users = await this.userService.findAll(filters)
     return users
+  }
+
+  @Query(() => UserPaginatedResult)
+  async usersPaginated(
+    @Arg('offset', () => Int) offset: number,
+    @Arg('take', () => Int) take: number,
+    @Arg('filters', () => UserFilterInput, { nullable: true }) filters?: UserFilterInput
+  ): Promise<UserPaginatedResult> {
+    const result = await this.userService.findAllPaginated(offset, take, filters)
+
+    return result
   }
 
   //@Authorized(['ADMIN'])

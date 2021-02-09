@@ -4,7 +4,7 @@ import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { UserCardTradeProposal } from './userCardTradeProposal'
 import { BaseEntity } from './_baseEntity'
-import { BaseUpdateInput, BaseFilterInput } from './_baseInputTypes'
+import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult } from './_baseInputTypes'
 import { UserCardToDonate } from './userCardToDonate'
 import { CardTradeRequest } from './cardTradeRequest'
 
@@ -131,4 +131,10 @@ export class UserFilterInput extends BaseFilterInput {
 
   @Field(() => Boolean, { nullable: true })
   isDeleted?: boolean
+}
+
+@ObjectType()
+export class UserPaginatedResult extends BasePaginatedResult {
+  @Field(() => [User])
+  data: User[]
 }

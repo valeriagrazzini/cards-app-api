@@ -1,4 +1,4 @@
-import { Field, ID, InputType, registerEnumType } from 'type-graphql'
+import { Field, ID, InputType, Int, ObjectType, registerEnumType } from 'type-graphql'
 
 @InputType({ isAbstract: true })
 export class BaseUpdateInput {
@@ -16,6 +16,15 @@ export class BaseFilterInput {
 
   @Field(() => Date, { nullable: true })
   updatedAt?: Date
+}
+
+@ObjectType()
+export class BasePaginatedResult {
+  @Field(() => Int)
+  offset: number
+
+  @Field(() => Int)
+  total: number
 }
 
 export enum Languages {

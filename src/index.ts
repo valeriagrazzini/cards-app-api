@@ -3,8 +3,7 @@
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import { ApolloServer } from 'apollo-server'
-import { createConnection } from 'typeorm'
-import { join } from 'path'
+
 import authChecker from './auth/authChecker'
 import { CardResolver } from './resolvers/card'
 import { SetResolver } from './resolvers/set'
@@ -16,21 +15,14 @@ import { UserResolver } from './resolvers/user'
 import { UserCardTradeProposalResolver } from './resolvers/userCardTradeProposal'
 import { UserCardToDonateResolver } from './resolvers/userCardToDonate'
 import jwt from 'jsonwebtoken'
+import { DbManager } from './db/dbManager'
 require('dotenv').config()
 
-const ormConfig = require('../ormconfig.json')
 const configuration = require('../config.json')
 
 async function start(): Promise<void> {
   // TYPEORM CONNECTION
-  await createConnection({
-    ...ormConfig,
-    entities: [join(__dirname + '/models/*.ts')],
-  })
-    .then(() => {
-      console.log('TYPEORM CONNECTION ESTABLISHED')
-    })
-    .catch((error) => console.log(error))
+  await DbManager.createConnection()
 
   // SET CONFIGURATIONS ..
   Container.get(CardService).setConfiguration(configuration)

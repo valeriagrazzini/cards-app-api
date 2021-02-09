@@ -14,6 +14,7 @@
     "typeorm": "^0.2.30"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.20",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.14.22",
     "@typescript-eslint/eslint-plugin": "^4.14.1",
@@ -24,11 +25,13 @@
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
     "install": "^0.13.0",
+    "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
     "nodemon": "^2.0.7",
     "npm": "^6.14.11",
     "onchange": "^7.1.0",
     "prettier": "^2.2.1",
+    "ts-jest": "^26.5.1",
     "ts-node": "^9.1.1",
     "tslint-config-prettier": "^1.18.0",
     "type-graphql": "^1.1.1",
@@ -36,7 +39,7 @@
   },
   "scripts": {
     "start": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec ts-node src/index.ts",
-    "test": "test",
+    "test": "jest",
     "build": "tsc --build",
     "postinstall": "npm run build",
     "tslint-check": "tslint-config-prettier-check ./tslint.json",
