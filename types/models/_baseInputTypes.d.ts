@@ -6,6 +6,10 @@ export declare class BaseFilterInput {
     createdAt?: Date;
     updatedAt?: Date;
 }
+export declare class BasePaginatedResult {
+    offset: number;
+    total: number;
+}
 export declare enum Languages {
     Italiano = "IT",
     Portuguese = "PT",

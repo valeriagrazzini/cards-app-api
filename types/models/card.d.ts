@@ -5,8 +5,9 @@ import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes';
 export declare class Card extends BaseEntity {
     name: string;
     pictureUrl?: string;
+    pictureThumbUrl?: string;
     setId: number;
-    set: Set;
+    set: Promise<Set>;
     rating: number;
     isGold: boolean;
     stars: number;
@@ -15,7 +16,8 @@ export declare class Card extends BaseEntity {
 }
 export declare class CardCreateInput {
     name: string;
-    pictureName?: string;
+    pictureUrl?: string;
+    pictureThumbUrl?: string;
     setId: number;
     rating?: number;
     isGold: boolean;
@@ -24,7 +26,8 @@ export declare class CardCreateInput {
 }
 export declare class CardUpdateInput extends BaseUpdateInput {
     name?: string;
-    pictureName?: string;
+    pictureUrl?: string;
+    pictureThumbUrl?: string;
     setId?: number;
     rating?: number;
     isGold?: boolean;

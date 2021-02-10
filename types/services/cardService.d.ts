@@ -1,6 +1,5 @@
 import { Card, CardFilterInput, CardCreateInput, CardUpdateInput } from '@/models/card';
 export declare class CardService {
-    private _picturePath;
     private modelName;
     setConfiguration(configuration: {
         cardPicturesPath: string;

@@ -1,10 +1,10 @@
 import { UserRole } from '@/auth/role';
 import { UserI } from '@/auth/user.interface';
 import { UserCardTradeProposal } from './userCardTradeProposal';
-import { CardTradeRequest } from './cardTradeRequest';
 import { BaseEntity } from './_baseEntity';
-import { BaseUpdateInput, BaseFilterInput } from './_baseInputTypes';
+import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult } from './_baseInputTypes';
 import { UserCardToDonate } from './userCardToDonate';
+import { CardTradeRequest } from './cardTradeRequest';
 export declare class User extends BaseEntity implements UserI {
     userName: string;
     email?: string;
@@ -46,4 +46,7 @@ export declare class UserFilterInput extends BaseFilterInput {
     facebookId?: string;
     isBanned?: boolean;
     isDeleted?: boolean;
+}
+export declare class UserPaginatedResult extends BasePaginatedResult {
+    data: User[];
 }

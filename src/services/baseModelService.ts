@@ -14,8 +14,24 @@ export class BaseModelService {
     return await getRepository<TModel>(modelName).find({ where: { ...data } })
   }
 
+  async findAllPaginated<TModel>(modelName: string, offset: number, take: number, filters?: any): Promise<any> {
+    const [rows, total] = await getRepository<TModel>(modelName)
+      .createQueryBuilder('model')
+      .where({ ...filters })
+      .take(take)
+      .skip(offset * take)
+      .getManyAndCount()
+
+    const result = {
+      data: rows,
+      total,
+      offset,
+      take,
+    }
+    return result
+  }
+
   async create<TModel>(modelName: string, data: any): Promise<TModel> {
-    console.log(modelName)
     return await getRepository<TModel>(modelName).save(data)
   }
 

@@ -6,27 +6,19 @@ import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes';
 export declare class UserCardTradeProposal extends BaseEntity {
     userId: number;
     user: User;
-    cardProposalId: number;
-    cardProposalQuantity: number;
-    cardRequestId: number;
-    cardRequestQuantity: number;
-    cardProposal: Promise<Card>;
-    cardRequest: Promise<Card>;
+    cardsOffered?: Promise<Card[]>;
+    cardsRequested?: Promise<Card[]>;
     tradeRequests: Promise<CardTradeRequest[]>;
 }
 export declare class UserCardTradeProposalCreateInput {
     userId: number;
-    cardProposalId: number;
-    cardProposalQuantity?: number;
-    cardRequestId: number;
-    cardRequestQuantity?: number;
+    cardsOfferedIds: number[];
+    cardsRequestedIds: number[];
 }
 export declare class UserCardTradeProposalUpdateInput extends BaseUpdateInput {
     userId?: number;
-    cardProposalId?: number;
-    cardProposalQuantity?: number;
-    cardRequestId?: number;
-    cardRequestQuantity?: number;
+    cardsOfferedIds?: number[];
+    cardsRequestedIds?: number[];
 }
 export declare class UserCardTradeProposalFilterInput extends BaseFilterInput {
     userId?: number;
