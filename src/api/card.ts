@@ -18,8 +18,8 @@ export class CardResolver {
 
   //@Authorized()
   @Query(() => [Card])
-  async cards(@Arg('data', () => CardFilterInput, { nullable: true }) data?: CardFilterInput): Promise<Card[]> {
-    const cards = await this.cardService.findAll(data)
+  async cards(@Arg('filters', () => CardFilterInput, { nullable: true }) filters?: CardFilterInput): Promise<Card[]> {
+    const cards = await this.cardService.findAll(filters)
     return cards
   }
 
