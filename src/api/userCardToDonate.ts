@@ -25,9 +25,9 @@ export class UserCardToDonateResolver {
   //@Authorized()
   @Query(() => [UserCardToDonate])
   async userCardToDonates(
-    @Arg('data', () => UserCardToDonateFilterInput, { nullable: true }) data?: UserCardToDonateFilterInput
+    @Arg('filters', () => UserCardToDonateFilterInput, { nullable: true }) filters?: UserCardToDonateFilterInput
   ): Promise<UserCardToDonate[]> {
-    const cards = await this.baseModelService.findAll<UserCardToDonate>('UserCardToDonate', data)
+    const cards = await this.baseModelService.findAll<UserCardToDonate>('UserCardToDonate', filters)
     return cards
   }
 
