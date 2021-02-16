@@ -40,7 +40,16 @@ export class BaseModelService {
       throw new Error('Entity id is missing!')
     }
     data.id = +data.id
-    return await getRepository<TModel>(modelName).save(data)
+    const repository = getRepository<TModel>(modelName)
+    const entity = await repository.findOne(data.id)
+
+    if (!entity) {
+      console.log('Entity not found!', data.id)
+      throw new Error('Entity not found!')
+    }
+    this._setModifiedValues(entity, data) // SET MODIFIED VALUES FROM INPUT
+
+    return await repository.save(entity)
   }
 
   async delete<TModel>(modelName: string, data: any): Promise<boolean> {
@@ -49,5 +58,15 @@ export class BaseModelService {
       return false
     }
     return true
+  }
+
+  private _setModifiedValues(obj: any, data: any): void {
+    const inputKeyValues = Object.entries(obj).map(([key, value]) => ({ key, value }))
+    for (let i = 0; i < inputKeyValues.length; i++) {
+      const entry = JSON.parse(JSON.stringify(inputKeyValues[i]))
+      if (Object(data)[entry.key] !== undefined) {
+        Object(obj)[entry.key] = Object(data)[entry.key]
+      }
+    }
   }
 }
