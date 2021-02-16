@@ -44,8 +44,8 @@ export class UserCardToDonateResolver {
   @Mutation(() => UserCardToDonate)
   async updateUserCardToDonate(
     @Arg('data', () => UserCardToDonateUpdateInput) data: UserCardToDonateUpdateInput
-  ): Promise<Card> {
-    const card = await this.baseModelService.update<Card>('Card', data)
+  ): Promise<UserCardToDonate> {
+    const card = await this.baseModelService.update<UserCardToDonate>('UserCardToDonate', data)
     return card
   }
 
