@@ -55,6 +55,18 @@ export class UserCardToDonateUpdateInput extends BaseUpdateInput {
 }
 
 @InputType()
+export class UserCardToDonateUpdateQuantityInput {
+  @Field(() => ID)
+  userId!: number
+
+  @Field(() => ID)
+  cardId!: number
+
+  @Field(() => ID)
+  quantity!: number
+}
+
+@InputType()
 export class UserCardToDonateFilterInput extends BaseFilterInput {
   @Field(() => ID, { nullable: true })
   userId?: number

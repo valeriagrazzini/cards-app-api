@@ -1,4 +1,4 @@
-import { BaseModelService } from '../services/baseModelService'
+import { UserCardToDonateService } from '../services/userCardToDonateService'
 import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root } from 'type-graphql'
 import { Inject, Service } from 'typedi'
 import { Card } from '../models/card'
@@ -7,18 +7,19 @@ import {
   UserCardToDonateCreateInput,
   UserCardToDonateFilterInput,
   UserCardToDonateUpdateInput,
+  UserCardToDonateUpdateQuantityInput,
 } from '../models/userCardToDonate'
 
 @Service()
 @Resolver(UserCardToDonate)
 export class UserCardToDonateResolver {
   @Inject()
-  private baseModelService: BaseModelService
+  private userCardToDonateService: UserCardToDonateService
 
   //@Authorized()
   @Query(() => UserCardToDonate, { nullable: true })
   async userCardToDonate(@Arg('id', () => ID) id: number): Promise<UserCardToDonate | undefined> {
-    const card = await this.baseModelService.findOne<UserCardToDonate>('UserCardToDonate', id)
+    const card = await this.userCardToDonateService.findOne(id)
     return card
   }
 
@@ -27,7 +28,7 @@ export class UserCardToDonateResolver {
   async userCardToDonates(
     @Arg('filters', () => UserCardToDonateFilterInput, { nullable: true }) filters?: UserCardToDonateFilterInput
   ): Promise<UserCardToDonate[]> {
-    const cards = await this.baseModelService.findAll<UserCardToDonate>('UserCardToDonate', filters)
+    const cards = await this.userCardToDonateService.findAll(filters)
     return cards
   }
 
@@ -36,7 +37,7 @@ export class UserCardToDonateResolver {
   async createUserCardToDonate(
     @Arg('data', () => UserCardToDonateCreateInput) data: UserCardToDonateCreateInput
   ): Promise<UserCardToDonate> {
-    const card = await this.baseModelService.create<UserCardToDonate>('UserCardToDonate', data)
+    const card = await this.userCardToDonateService.create(data)
     return card
   }
 
@@ -45,14 +46,22 @@ export class UserCardToDonateResolver {
   async updateUserCardToDonate(
     @Arg('data', () => UserCardToDonateUpdateInput) data: UserCardToDonateUpdateInput
   ): Promise<UserCardToDonate> {
-    const card = await this.baseModelService.update<UserCardToDonate>('UserCardToDonate', data)
+    const card = await this.userCardToDonateService.update(data)
+    return card
+  }
+
+  @Mutation(() => UserCardToDonate)
+  async updateUserCardToDonateQuantity(
+    @Arg('data', () => UserCardToDonateUpdateQuantityInput) data: UserCardToDonateUpdateQuantityInput
+  ): Promise<UserCardToDonate> {
+    const card = await this.userCardToDonateService.updateQuantity(data)
     return card
   }
 
   //@Authorized(['ADMIN'])
   @Mutation(() => Boolean)
   async deleteUserCardToDonate(@Arg('id', () => ID) id: number): Promise<boolean> {
-    const card = await this.baseModelService.delete<UserCardToDonate>('UserCardToDonate', id)
+    const card = await this.userCardToDonateService.delete(id)
     return card
   }
 
