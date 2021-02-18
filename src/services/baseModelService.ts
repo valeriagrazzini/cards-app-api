@@ -7,11 +7,14 @@ export class BaseModelService {
     return await getRepository<TModel>(modelName).findOne(data)
   }
 
-  async findAll<TModel>(modelName: string, data?: any): Promise<TModel[]> {
-    if (!data) {
-      return await getRepository<TModel>(modelName).find()
+  async findAll<TModel>(modelName: string, filters?: any, cache?: boolean): Promise<TModel[]> {
+    if (cache === undefined) {
+      cache = false
     }
-    return await getRepository<TModel>(modelName).find({ where: { ...data } })
+    if (!filters) {
+      return await getRepository<TModel>(modelName).find({ cache })
+    }
+    return await getRepository<TModel>(modelName).find({ where: { ...filters }, cache })
   }
 
   async findAllPaginated<TModel>(modelName: string, offset: number, take: number, filters?: any): Promise<any> {

@@ -16,7 +16,7 @@ export class CardService {
   }
 
   async findAll(data?: CardFilterInput): Promise<Card[]> {
-    const cards = await Container.get(BaseModelService).findAll<Card>(this.modelName, data)
+    const cards = await Container.get(BaseModelService).findAll<Card>(this.modelName, data, true)
     return cards
   }
 
