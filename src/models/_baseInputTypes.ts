@@ -3,7 +3,7 @@ import { Field, ID, InputType, Int, ObjectType, registerEnumType } from 'type-gr
 @InputType({ isAbstract: true })
 export class BaseUpdateInput {
   @Field(() => ID)
-  id!: number
+  id?: number
 }
 
 @InputType({ isAbstract: true })
