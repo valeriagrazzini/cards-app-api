@@ -39,12 +39,12 @@ export class BaseModelService {
   }
 
   async update<TModel>(modelName: string, data: any): Promise<TModel> {
-    if (!data.id) {
-      throw new Error('Entity id is missing!')
+    if (data.id) {
+      data.id = +data.id
     }
-    data.id = +data.id
+
     const repository = getRepository<TModel>(modelName)
-    const entity = await repository.findOne(data.id)
+    const entity = await repository.findOne({ where: { ...data } })
 
     if (!entity) {
       console.log('Entity not found!', data.id)
