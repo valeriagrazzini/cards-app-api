@@ -14,7 +14,7 @@ export class BaseModelService {
     if (!filters) {
       return await getRepository<TModel>(modelName).find({ cache })
     }
-    return await getRepository<TModel>(modelName).find({ where: { ...filters }, cache })
+    return await getRepository<TModel>(modelName).find({ where: { ...filters } })
   }
 
   async findAllPaginated<TModel>(modelName: string, offset: number, take: number, filters?: any): Promise<any> {
@@ -39,12 +39,12 @@ export class BaseModelService {
   }
 
   async update<TModel>(modelName: string, data: any): Promise<TModel> {
-    if (data.id) {
-      data.id = +data.id
+    if (!data.id) {
+      throw new Error('Entity id is missing!')
     }
-
+    data.id = +data.id
     const repository = getRepository<TModel>(modelName)
-    const entity = await repository.findOne({ where: { ...data } })
+    const entity = await repository.findOne(data.id)
 
     if (!entity) {
       console.log('Entity not found!', data.id)
