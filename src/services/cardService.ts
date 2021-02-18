@@ -26,7 +26,10 @@ export class CardService {
   }
 
   async update(data: CardUpdateInput): Promise<Card> {
-    data.id = +data.id
+    if (data.id) {
+      data.id = +data.id
+    }
+
     const card = await Container.get(BaseModelService).create<Card>(this.modelName, { ...data })
     return card
   }

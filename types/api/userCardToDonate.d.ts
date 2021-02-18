@@ -3,9 +3,9 @@ import { UserCardToDonate, UserCardToDonateCreateInput, UserCardToDonateFilterIn
 export declare class UserCardToDonateResolver {
     private baseModelService;
     userCardToDonate(id: number): Promise<UserCardToDonate | undefined>;
-    userCardToDonates(data?: UserCardToDonateFilterInput): Promise<UserCardToDonate[]>;
+    userCardToDonates(filters?: UserCardToDonateFilterInput): Promise<UserCardToDonate[]>;
     createUserCardToDonate(data: UserCardToDonateCreateInput): Promise<UserCardToDonate>;
-    updateUserCardToDonate(data: UserCardToDonateUpdateInput): Promise<Card>;
+    updateUserCardToDonate(data: UserCardToDonateUpdateInput): Promise<UserCardToDonate>;
     deleteUserCardToDonate(id: number): Promise<boolean>;
     card(userCardToDonate: UserCardToDonate): Promise<Card>;
 }

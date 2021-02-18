@@ -1,5 +1,5 @@
 export declare class BaseUpdateInput {
-    id: number;
+    id?: number;
 }
 export declare class BaseFilterInput {
     id?: number;
