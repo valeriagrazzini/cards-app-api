@@ -61,9 +61,6 @@ export class UserCardToDonateUpdateQuantityInput {
 
   @Field(() => ID)
   cardId!: number
-
-  @Field(() => ID)
-  quantity!: number
 }
 
 @InputType()

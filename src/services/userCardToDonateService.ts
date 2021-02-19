@@ -19,8 +19,11 @@ export class UserCardToDonateService {
   }
 
   async findAll(filters?: UserCardToDonateFilterInput): Promise<UserCardToDonate[]> {
-    const users = await Container.get(BaseModelService).findAll<UserCardToDonate>('UserCardToDonate', filters)
-    return users
+    const result = await getRepository<UserCardToDonate>('UserCardToDonate').find({
+      where: { ...filters },
+      order: { id: 'ASC', cardId: 'ASC' },
+    })
+    return result
   }
 
   async create(data: UserCardToDonateCreateInput): Promise<UserCardToDonate> {
@@ -42,16 +45,25 @@ export class UserCardToDonateService {
     const repository = getRepository<UserCardToDonate>('UserCardToDonate')
     const entity = await repository.findOne({ where: { userId: data.userId, cardId: data.cardId } })
     if (!entity) {
-      console.log('Entity not found!', data)
-      throw new Error('Entity not found!')
+      return await repository.save({
+        userId: data.userId,
+        cardId: data.cardId,
+        quantity: 1,
+      })
+    } else {
+      console.log('mi hanno chiamato', data)
+      entity.quantity = entity.quantity + 1
+      return await repository.save(entity)
     }
-    entity.quantity = data.quantity > 0 ? data.quantity : entity.quantity
-    await repository.save(entity)
-    return entity
   }
 
   async delete(id: number): Promise<boolean> {
     const userCardToDonate = await Container.get(BaseModelService).delete<UserCardToDonate>('UserCardToDonate', id)
     return userCardToDonate
+  }
+
+  async deleteBy(filters: UserCardToDonateFilterInput): Promise<boolean> {
+    const result = await getRepository<UserCardToDonate>('UserCardToDonate').delete({ ...filters })
+    return result.affected && result.affected > 0 ? true : false
   }
 }

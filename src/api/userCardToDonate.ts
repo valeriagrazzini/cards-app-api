@@ -65,6 +65,14 @@ export class UserCardToDonateResolver {
     return card
   }
 
+  @Mutation(() => Boolean)
+  async deleteUserCardToDonateBy(
+    @Arg('filters', () => UserCardToDonateFilterInput) filters: UserCardToDonateFilterInput
+  ): Promise<boolean> {
+    const card = await this.userCardToDonateService.deleteBy(filters)
+    return card
+  }
+
   @FieldResolver(() => Card)
   async card(@Root() userCardToDonate: UserCardToDonate): Promise<Card> {
     return await userCardToDonate.card
