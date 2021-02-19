@@ -21,7 +21,7 @@ export class UserCardToDonateService {
   async findAll(filters?: UserCardToDonateFilterInput): Promise<UserCardToDonate[]> {
     const result = await getRepository<UserCardToDonate>('UserCardToDonate').find({
       where: { ...filters },
-      order: { id: 'ASC', cardId: 'ASC' },
+      order: { cardId: 'ASC' },
     })
     return result
   }
@@ -69,9 +69,7 @@ export class UserCardToDonateService {
   async deleteBy(filters: UserCardToDonateFilterInput): Promise<UserCardToDonate[]> {
     const repository = getRepository<UserCardToDonate>('UserCardToDonate')
     const entitiesToRemove = await repository.find({ where: { ...filters } })
-
     const result = await repository.remove(entitiesToRemove)
-    console.log('result', result)
     return result
   }
 }
