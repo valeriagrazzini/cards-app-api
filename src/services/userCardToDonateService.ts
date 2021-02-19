@@ -52,7 +52,9 @@ export class UserCardToDonateService {
       })
     } else {
       console.log('mi hanno chiamato', data)
-      entity.quantity = entity.quantity + 1
+
+      entity.quantity = data.remove ? entity.quantity - 1 : entity.quantity + 1
+
       return await repository.save(entity)
     }
   }

@@ -61,6 +61,9 @@ export class UserCardToDonateUpdateQuantityInput {
 
   @Field(() => ID)
   cardId!: number
+
+  @Field(() => Boolean, { nullable: true })
+  remove?: boolean
 }
 
 @InputType()
