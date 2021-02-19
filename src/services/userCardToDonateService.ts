@@ -51,11 +51,13 @@ export class UserCardToDonateService {
         quantity: 1,
       })
     } else {
-      console.log('mi hanno chiamato', data)
+      const newQuantity = data.remove ? entity.quantity - 1 : entity.quantity + 1
 
-      entity.quantity = data.remove ? entity.quantity - 1 : entity.quantity + 1
-
-      return await repository.save(entity)
+      if (newQuantity > 0) {
+        entity.quantity = newQuantity
+        return await repository.save(entity)
+      }
+      return entity
     }
   }
 
@@ -64,8 +66,12 @@ export class UserCardToDonateService {
     return userCardToDonate
   }
 
-  async deleteBy(filters: UserCardToDonateFilterInput): Promise<boolean> {
-    const result = await getRepository<UserCardToDonate>('UserCardToDonate').delete({ ...filters })
-    return result.affected && result.affected > 0 ? true : false
+  async deleteBy(filters: UserCardToDonateFilterInput): Promise<UserCardToDonate[]> {
+    const repository = getRepository<UserCardToDonate>('UserCardToDonate')
+    const entitiesToRemove = await repository.find({ where: { ...filters } })
+
+    const result = await repository.remove(entitiesToRemove)
+    console.log('result', result)
+    return result
   }
 }
