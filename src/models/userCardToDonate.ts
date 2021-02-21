@@ -1,5 +1,5 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, Index, ManyToOne } from 'typeorm'
 import { Card } from './card'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
@@ -9,6 +9,7 @@ import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
 @Entity('userCardsToDonate')
 export class UserCardToDonate extends BaseEntity {
   @Field(() => ID)
+  @Index()
   @Column('int')
   userId!: number
 
@@ -16,7 +17,7 @@ export class UserCardToDonate extends BaseEntity {
     onDelete: 'CASCADE',
     eager: false,
   })
-  user!: User
+  user?: User
 
   @Field(() => ID)
   @Column('int')

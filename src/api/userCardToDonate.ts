@@ -32,6 +32,15 @@ export class UserCardToDonateResolver {
     return cards
   }
 
+  @Query(() => [UserCardToDonate], { nullable: true })
+  async userCardToDonatesFindInSet(
+    @Arg('userId', () => ID) userId: number,
+    @Arg('setId', () => ID) setId: number
+  ): Promise<UserCardToDonate[]> {
+    const result = await this.userCardToDonateService.findInSet(userId, setId)
+    return result
+  }
+
   //@Authorized(['ADMIN'])
   @Mutation(() => UserCardToDonate)
   async createUserCardToDonate(
@@ -46,7 +55,17 @@ export class UserCardToDonateResolver {
   async updateUserCardToDonate(
     @Arg('data', () => UserCardToDonateUpdateInput) data: UserCardToDonateUpdateInput
   ): Promise<UserCardToDonate> {
+    console.log('MI HANNO CHIAMATO', data)
     const card = await this.userCardToDonateService.update(data)
+    return card
+  }
+
+  @Mutation(() => UserCardToDonate)
+  async upSertUserCardToDonate(
+    @Arg('data', () => UserCardToDonateUpdateInput) data: UserCardToDonateUpdateInput
+  ): Promise<UserCardToDonate> {
+    console.log('MI HANNO CHIAMATO', data)
+    const card = await this.userCardToDonateService.upsert(data)
     return card
   }
 
