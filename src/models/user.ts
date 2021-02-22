@@ -4,7 +4,7 @@ import { ObjectType, Field, Int, InputType } from 'type-graphql'
 import { Column, Entity, OneToMany } from 'typeorm'
 import { UserCardTradeProposal } from './userCardTradeProposal'
 import { BaseEntity } from './_baseEntity'
-import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult } from './_baseInputTypes'
+import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult, Languages } from './_baseInputTypes'
 import { UserCardToDonate } from './userCardToDonate'
 import { CardTradeRequest } from './cardTradeRequest'
 
@@ -29,6 +29,10 @@ export class User extends BaseEntity implements UserI {
 
   @Column({ nullable: true })
   password?: string
+
+  @Field(() => String)
+  @Column({ default: Languages.English })
+  lang!: string
 
   @Field(() => [String])
   @Column('text', { array: true })

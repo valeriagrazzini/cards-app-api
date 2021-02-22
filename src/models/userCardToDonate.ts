@@ -1,9 +1,9 @@
-import { ObjectType, Field, InputType, ID } from 'type-graphql'
+import { ObjectType, Field, InputType, ID, Int } from 'type-graphql'
 import { Column, Entity, Index, ManyToOne } from 'typeorm'
 import { Card } from './card'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
-import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
+import { BaseFilterInput, BaseOrderInput, BaseUpdateInput, Sorting } from './_baseInputTypes'
 
 @ObjectType()
 @Entity('userCardsToDonate')
@@ -17,7 +17,7 @@ export class UserCardToDonate extends BaseEntity {
     onDelete: 'CASCADE',
     eager: false,
   })
-  user?: User
+  user!: Promise<User>
 
   @Field(() => ID)
   @Column('int')
@@ -74,4 +74,25 @@ export class UserCardToDonateFilterInput extends BaseFilterInput {
 
   @Field(() => ID, { nullable: true })
   cardId?: number
+
+  @Field(() => [ID], { nullable: true })
+  cardIds?: number[]
+}
+
+@InputType()
+export class UserCardToDonateOrderInput extends BaseOrderInput {
+  @Field(() => Sorting, { nullable: true })
+  userId?: Sorting
+
+  @Field(() => Sorting, { nullable: true })
+  cardId?: Sorting
+}
+
+@ObjectType()
+export class UserCardToDonatesearchResult {
+  @Field(() => User)
+  user!: User
+
+  @Field(() => Int)
+  quantity!: number
 }

@@ -8,9 +8,12 @@ import {
   UserCardToDonateCreateInput,
   UserCardToDonateUpdateInput,
   UserCardToDonateUpdateQuantityInput,
+  UserCardToDonateOrderInput,
+  UserCardToDonatesearchResult,
 } from '@/models/userCardToDonate'
 import { getRepository } from 'typeorm'
 import { Card } from '@/models/card'
+import { User } from '@/models/user'
 
 @Service()
 export class UserCardToDonateService {
@@ -19,10 +22,78 @@ export class UserCardToDonateService {
     return userCardToDonate
   }
 
-  async findAll(filters?: UserCardToDonateFilterInput): Promise<UserCardToDonate[]> {
-    const result = await getRepository<UserCardToDonate>('UserCardToDonate').find({
-      where: { ...filters },
-      order: { cardId: 'ASC' },
+  async findAll(
+    filters?: UserCardToDonateFilterInput,
+    order?: UserCardToDonateOrderInput
+  ): Promise<UserCardToDonate[]> {
+    console.log('filters', filters)
+
+    const baseQuery = getRepository<UserCardToDonate>('UserCardToDonate').createQueryBuilder('uctd')
+
+    if (filters) {
+      if (filters.id) {
+        baseQuery.where('uctd.id = :id', { id: filters.id })
+      } else {
+        if (filters.cardId) {
+          baseQuery.andWhere('uctd.cardId = :cardId', { cardId: filters.cardId })
+        }
+
+        if (filters.userId) {
+          baseQuery.andWhere('uctd.userId = :userId', { userId: filters.userId })
+        }
+        if (filters.cardIds) {
+          baseQuery.andWhere(`uctd.cardId IN (${filters.cardIds.map(Number)})`)
+        }
+      }
+    }
+    if (order) {
+      if (order.createdAt) {
+        baseQuery.addOrderBy('uctd.createdAt', order.createdAt)
+      }
+      if (order.userId) {
+        baseQuery.addOrderBy('uctd.userId', order.userId)
+      }
+      if (order.cardId) {
+        baseQuery.addOrderBy('uctd.cardId', order.cardId)
+      }
+    } else {
+      baseQuery.orderBy('uctd.cardId', 'ASC')
+    }
+    const queryResult = await baseQuery.getMany()
+    console.log(queryResult)
+    return queryResult
+  }
+
+  async findAllUsers(cardIds: number[]): Promise<UserCardToDonatesearchResult[]> {
+    if (cardIds.length == 0) {
+      return []
+    }
+
+    const baseQuery = getRepository<UserCardToDonate>('UserCardToDonate')
+      .createQueryBuilder('uctd')
+      .innerJoin('users', 'user', '(uctd.userId = user.id AND user.isDeleted = FALSE AND user.isBanned = FALSE)')
+      .select('user.id', 'userId')
+      .addSelect('user.userName', 'userName')
+      .addSelect('user.profilePictureUrl', 'profilePictureUrl')
+      .addSelect('user.lang', 'lang')
+      .addSelect('user.rating', 'rating')
+      .addSelect('SUM(uctd.quantity)', 'total')
+      .where(`uctd.cardId IN (${cardIds.map(Number)})`)
+      .groupBy('user.id')
+      .orderBy('total', 'DESC')
+
+    const queryResult = await baseQuery.getRawMany()
+    const result = queryResult.map((x) => {
+      return {
+        quantity: x.total,
+        user: {
+          id: x.userId,
+          userName: x.userName,
+          profilePictureUrl: x.profilePictureUrl,
+          lang: x.lang,
+          rating: x.rating,
+        } as User,
+      } as UserCardToDonatesearchResult
     })
     return result
   }

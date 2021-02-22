@@ -36,3 +36,23 @@ registerEnumType(Languages, {
   name: 'Languages',
   description: 'Available Languages',
 })
+
+export enum Sorting {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
+registerEnumType(Languages, {
+  name: 'Sorting',
+  description: 'Sortings types',
+})
+
+export class BaseOrderInput {
+  @Field(() => Sorting, { nullable: true })
+  id?: Sorting
+
+  @Field(() => Sorting, { nullable: true })
+  createdAt?: Sorting
+
+  @Field(() => Sorting, { nullable: true })
+  updatedAt?: Sorting
+}

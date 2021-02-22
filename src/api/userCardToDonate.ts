@@ -6,9 +6,12 @@ import {
   UserCardToDonate,
   UserCardToDonateCreateInput,
   UserCardToDonateFilterInput,
+  UserCardToDonatesearchResult,
   UserCardToDonateUpdateInput,
   UserCardToDonateUpdateQuantityInput,
 } from '../models/userCardToDonate'
+import { User } from '../models/user'
+import { getRepository } from 'typeorm'
 
 @Service()
 @Resolver(UserCardToDonate)
@@ -29,6 +32,15 @@ export class UserCardToDonateResolver {
     @Arg('filters', () => UserCardToDonateFilterInput, { nullable: true }) filters?: UserCardToDonateFilterInput
   ): Promise<UserCardToDonate[]> {
     const cards = await this.userCardToDonateService.findAll(filters)
+    return cards
+  }
+
+  //@Authorized()
+  @Query(() => [UserCardToDonatesearchResult])
+  async userCardToDonatesfindAllUsers(
+    @Arg('cardIds', () => [ID]) cardIds: number[]
+  ): Promise<UserCardToDonatesearchResult[]> {
+    const cards = await this.userCardToDonateService.findAllUsers(cardIds)
     return cards
   }
 
@@ -92,8 +104,13 @@ export class UserCardToDonateResolver {
     return result
   }
 
-  @FieldResolver(() => Card)
-  async card(@Root() userCardToDonate: UserCardToDonate): Promise<Card> {
-    return await userCardToDonate.card
+  @FieldResolver(() => Card, { nullable: true })
+  async card(@Root() userCardToDonate: UserCardToDonate): Promise<Card | undefined> {
+    return await getRepository<Card>('Card').findOne(userCardToDonate.cardId)
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  async user(@Root() userCardToDonate: UserCardToDonate): Promise<User | undefined> {
+    return await getRepository<User>('User').findOne(userCardToDonate.userId)
   }
 }
