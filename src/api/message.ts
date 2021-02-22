@@ -19,9 +19,9 @@ export class MessageResolver {
   //@Authorized()
   @Query(() => [Message])
   async messages(
-    @Arg('data', () => MessageFilterInput, { nullable: true }) data?: MessageFilterInput
+    @Arg('filters', () => MessageFilterInput, { nullable: true }) filters?: MessageFilterInput
   ): Promise<Message[]> {
-    const messages = await this.baseModelService.findAll<Message>('Message', data)
+    const messages = await this.baseModelService.findAll<Message>('Message', filters)
     return messages
   }
 
