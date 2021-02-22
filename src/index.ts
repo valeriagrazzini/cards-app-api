@@ -2,7 +2,7 @@
 
 import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer } from 'apollo-server-express'
 
 import authChecker from './auth/authChecker'
 import { CardResolver } from './api/card'
@@ -17,6 +17,9 @@ import { UserCardToDonateResolver } from './api/userCardToDonate'
 import { SpinRequestResolver } from './api/spinRequest'
 import jwt from 'jsonwebtoken'
 import { DbManager } from './db/dbManager'
+import express from 'express'
+import http from 'http'
+import { MessageResolver } from './api/message'
 require('dotenv').config()
 
 const configuration = require('../config.json')
@@ -39,18 +42,24 @@ async function start(): Promise<void> {
       UserCardTradeProposalResolver,
       UserCardToDonateResolver,
       SpinRequestResolver,
+      MessageResolver,
     ],
     authChecker,
     container: Container,
     //authMode: "null",
   })
 
+  const app = express()
+
   // APOLLO SERVER CREATION
   const server = new ApolloServer({
     introspection: true,
     playground: true,
     schema,
-    context: ({ req }): any => {
+    context: ({ req, connection }): any => {
+      if (connection) {
+        return connection.context
+      }
       let token = req.headers.authorization
       if (!token) {
         console.log('info NOT LOGGED IN')
@@ -62,8 +71,16 @@ async function start(): Promise<void> {
       return decoded
     },
   })
+
+  server.applyMiddleware({ app })
+  const httpServer = http.createServer(app)
+  server.installSubscriptionHandlers(httpServer)
+
   const port = process.env.PORT ? process.env.PORT : 5000
-  await server.listen(port)
-  console.log(`GRAPHQL SERVER STARTED -> http://localhost:${port}/graphql`)
+
+  httpServer.listen({ port }, () => {
+    console.log(`🚀 Server ready at http://localhost:${port}${server.graphqlPath}`)
+    console.log(`🚀 Subscriptions ready at ws://localhost:${port}${server.subscriptionsPath}`)
+  })
 }
 start()

@@ -60,7 +60,6 @@ export class UserCardToDonateService {
       baseQuery.orderBy('uctd.cardId', 'ASC')
     }
     const queryResult = await baseQuery.getMany()
-    console.log(queryResult)
     return queryResult
   }
 
