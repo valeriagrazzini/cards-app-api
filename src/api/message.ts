@@ -1,7 +1,20 @@
 import { BaseModelService } from '../services/baseModelService'
-import { Resolver, Query, Arg, ID, Mutation, Subscription, PubSub, Root, PubSubEngine } from 'type-graphql'
+import {
+  Resolver,
+  Query,
+  Arg,
+  ID,
+  Mutation,
+  Subscription,
+  PubSub,
+  Root,
+  PubSubEngine,
+  FieldResolver,
+} from 'type-graphql'
 import { Inject, Service } from 'typedi'
 import { Message, MessageCreateInput, MessageFilterInput } from '../models/message'
+import { User } from '../models/user'
+import { getRepository } from 'typeorm'
 const topic = 'MESSAGES'
 @Service()
 @Resolver(Message)
@@ -51,5 +64,15 @@ export class MessageResolver {
     return {
       ...notificationPayload,
     }
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  async senderUser(@Root() message: Message): Promise<User | undefined> {
+    return await getRepository<User>('User').findOne(message.senderUserId)
+  }
+
+  @FieldResolver(() => User, { nullable: true })
+  async receiverUser(@Root() message: Message): Promise<User | undefined> {
+    return await getRepository<User>('User').findOne(message.receiverUserId)
   }
 }

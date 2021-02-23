@@ -1,18 +1,31 @@
-import { ObjectType, Field, InputType } from 'type-graphql'
-import { Column, Entity } from 'typeorm'
+import { ObjectType, Field, InputType, ID } from 'type-graphql'
+import { Column, Entity, ManyToOne } from 'typeorm'
+import { User } from './user'
 import { BaseEntity } from './_baseEntity'
-import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
+import { BaseFilterInput } from './_baseInputTypes'
 
 @ObjectType()
 @Entity('messages')
 export class Message extends BaseEntity {
-  @Field()
+  @Field(() => ID)
   @Column()
-  userId!: number
+  senderUserId!: number
 
-  @Field()
+  @ManyToOne(() => User, (user) => user.sentMessages, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  senderUser!: Promise<User>
+
+  @Field(() => ID)
   @Column()
-  senderName!: string
+  receiverUserId!: number
+
+  @ManyToOne(() => User, (user) => user.receivedMessages, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  receiverUser!: Promise<User>
 
   @Field()
   @Column('text')
@@ -21,30 +34,22 @@ export class Message extends BaseEntity {
 
 @InputType()
 export class MessageCreateInput {
-  @Field()
-  userId!: number
+  @Field(() => ID)
+  senderUserId!: number
+
+  @Field(() => ID)
+  receiverUserId!: number
 
   @Field()
-  senderName!: string
-
-  @Field()
+  @Column('text')
   text!: string
 }
 
 @InputType()
-export class MessageUpdateInput extends BaseUpdateInput {
-  @Field({ nullable: true })
-  text?: string
-}
-
-@InputType()
 export class MessageFilterInput extends BaseFilterInput {
-  @Field({ nullable: true })
-  userId?: number
+  @Field(() => ID, { nullable: true })
+  senderUserId?: number
 
-  @Field({ nullable: true })
-  senderName?: string
-
-  @Field({ nullable: true })
-  text?: string
+  @Field(() => ID, { nullable: true })
+  receiverUserId?: number
 }

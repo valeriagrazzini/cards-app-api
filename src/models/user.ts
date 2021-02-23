@@ -7,6 +7,7 @@ import { BaseEntity } from './_baseEntity'
 import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult, Languages } from './_baseInputTypes'
 import { UserCardToDonate } from './userCardToDonate'
 import { CardTradeRequest } from './cardTradeRequest'
+import { Message } from './message'
 
 @ObjectType()
 @Entity('users')
@@ -66,6 +67,12 @@ export class User extends BaseEntity implements UserI {
 
   @OneToMany(() => UserCardToDonate, (userCardToDonate) => userCardToDonate.user)
   cardsToDonate!: Promise<UserCardToDonate[]>
+
+  @OneToMany(() => Message, (message) => message.senderUser)
+  sentMessages!: Promise<Message[]>
+
+  @OneToMany(() => Message, (message) => message.receiverUser)
+  receivedMessages!: Promise<Message[]>
 }
 
 @InputType()
