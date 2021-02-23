@@ -20,6 +20,7 @@ import { DbManager } from './db/dbManager'
 import express from 'express'
 import http from 'http'
 import { MessageResolver } from './api/message'
+import { ChatResolver } from './api/chat'
 require('dotenv').config()
 
 const configuration = require('../config.json')
@@ -43,6 +44,7 @@ async function start(): Promise<void> {
       UserCardToDonateResolver,
       SpinRequestResolver,
       MessageResolver,
+      ChatResolver,
     ],
     authChecker,
     container: Container,

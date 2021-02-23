@@ -1,5 +1,6 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
 import { Column, Entity, ManyToOne } from 'typeorm'
+import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
 import { BaseFilterInput } from './_baseInputTypes'
@@ -7,6 +8,16 @@ import { BaseFilterInput } from './_baseInputTypes'
 @ObjectType()
 @Entity('messages')
 export class Message extends BaseEntity {
+  @Field(() => ID)
+  @Column()
+  chatId!: number
+
+  @ManyToOne(() => Chat, (chat) => chat.messages, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  chat!: Promise<Chat>
+
   @Field(() => ID)
   @Column()
   senderUserId!: number
@@ -35,6 +46,9 @@ export class Message extends BaseEntity {
 @InputType()
 export class MessageCreateInput {
   @Field(() => ID)
+  chatId!: number
+
+  @Field(() => ID)
   senderUserId!: number
 
   @Field(() => ID)
@@ -47,6 +61,9 @@ export class MessageCreateInput {
 
 @InputType()
 export class MessageFilterInput extends BaseFilterInput {
+  @Field(() => ID, { nullable: true })
+  chatId?: number
+
   @Field(() => ID, { nullable: true })
   senderUserId?: number
 
