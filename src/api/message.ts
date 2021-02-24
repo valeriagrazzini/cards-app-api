@@ -34,6 +34,7 @@ export class MessageResolver {
   async messages(
     @Arg('filters', () => MessageFilterInput, { nullable: true }) filters?: MessageFilterInput
   ): Promise<Message[]> {
+    console.log('filters', filters)
     const messages = await this.baseModelService.findAll<Message>('Message', filters)
     return messages
   }

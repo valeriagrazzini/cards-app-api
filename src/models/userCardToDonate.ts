@@ -1,6 +1,7 @@
 import { ObjectType, Field, InputType, ID, Int } from 'type-graphql'
 import { Column, Entity, Index, ManyToOne } from 'typeorm'
 import { Card } from './card'
+import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
 import { BaseFilterInput, BaseOrderInput, BaseUpdateInput, Sorting } from './_baseInputTypes'
@@ -95,4 +96,7 @@ export class UserCardToDonatesearchResult {
 
   @Field(() => Int)
   quantity!: number
+
+  @Field(() => Chat, { nullable: true })
+  chat?: Chat
 }

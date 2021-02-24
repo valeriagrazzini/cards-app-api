@@ -38,9 +38,10 @@ export class UserCardToDonateResolver {
   //@Authorized()
   @Query(() => [UserCardToDonatesearchResult])
   async userCardToDonatesfindAllUsers(
+    @Arg('currentUserId', () => ID) currentUserId: number,
     @Arg('cardIds', () => [ID]) cardIds: number[]
   ): Promise<UserCardToDonatesearchResult[]> {
-    const cards = await this.userCardToDonateService.findAllUsers(cardIds)
+    const cards = await this.userCardToDonateService.findAllUsers(currentUserId, cardIds)
     return cards
   }
 

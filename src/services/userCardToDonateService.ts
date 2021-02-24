@@ -14,6 +14,7 @@ import {
 import { getRepository } from 'typeorm'
 import { Card } from '@/models/card'
 import { User } from '@/models/user'
+import { Chat } from '@/models/chat'
 
 @Service()
 export class UserCardToDonateService {
@@ -63,14 +64,19 @@ export class UserCardToDonateService {
     return queryResult
   }
 
-  async findAllUsers(cardIds: number[]): Promise<UserCardToDonatesearchResult[]> {
+  async findAllUsers(currentUserId: number, cardIds: number[]): Promise<UserCardToDonatesearchResult[]> {
     if (cardIds.length == 0) {
       return []
     }
 
     const baseQuery = getRepository<UserCardToDonate>('UserCardToDonate')
       .createQueryBuilder('uctd')
-      .innerJoin('users', 'user', '(uctd.userId = user.id AND user.isDeleted = FALSE AND user.isBanned = FALSE)')
+      .innerJoin(
+        'users',
+        'user',
+        '(uctd.userId = user.id AND user.id != :currentUserId AND user.isDeleted = FALSE AND user.isBanned = FALSE)',
+        { currentUserId }
+      )
       .select('user.id', 'userId')
       .addSelect('user.userName', 'userName')
       .addSelect('user.profilePictureUrl', 'profilePictureUrl')
@@ -82,8 +88,9 @@ export class UserCardToDonateService {
       .orderBy('total', 'DESC')
 
     const queryResult = await baseQuery.getRawMany()
+
     const result = queryResult.map((x) => {
-      return {
+      const result = {
         quantity: x.total,
         user: {
           id: x.userId,
@@ -93,8 +100,26 @@ export class UserCardToDonateService {
           rating: x.rating,
         } as User,
       } as UserCardToDonatesearchResult
+
+      return result
     })
+    for (let i = 0; i < result.length; i++) {
+      const row = result[i]
+      row.chat = await this._getUserChat(currentUserId, row.user.id)
+    }
     return result
+  }
+
+  private async _getUserChat(creatorUserId: number, receiverUserId: number): Promise<Chat | undefined> {
+    const repository = getRepository<Chat>('Chat')
+    const chat = await repository
+      .createQueryBuilder('chat')
+      .where(
+        '(chat.creatorUserId = :creatorUserId AND chat.receiverUserId = :receiverUserId) OR (chat.creatorUserId = :receiverUserId AND chat.receiverUserId = :creatorUserId)',
+        { creatorUserId, receiverUserId }
+      )
+      .getOne()
+    return chat
   }
 
   async findInSet(userId: number, setId: number): Promise<UserCardToDonate[]> {
