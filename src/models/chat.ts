@@ -1,11 +1,12 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm'
 import { Message } from './message'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
 import { BaseFilterInput } from './_baseInputTypes'
 
 @ObjectType()
+@Unique('chats_index', ['creatorUserId', 'receiverUserId'])
 @Entity('chats')
 export class Chat extends BaseEntity {
   @Field(() => ID)
