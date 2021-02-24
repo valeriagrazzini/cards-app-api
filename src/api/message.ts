@@ -60,8 +60,9 @@ export class MessageResolver {
 
   @Subscription(() => Message, {
     topics: topic,
+    filter: ({ payload, args }) => (args.chatId = payload.chatId),
   })
-  async newMessage(@Root() message: Message): Promise<Message> {
+  async newMessage(@Root() message: Message, @Arg('chatId', () => ID) chatId: number): Promise<Message> {
     return {
       ...message,
     }
