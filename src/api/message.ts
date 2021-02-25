@@ -47,13 +47,21 @@ export class MessageResolver {
     @PubSub() pubSub: PubSubEngine
   ): Promise<Message> {
     let cards: Card[] = []
+
     if (data.cardIds && data.cardIds.length > 0) {
       cards = await getRepository<Card>('Card')
         .createQueryBuilder('card')
         .where(`card.id IN (${data.cardIds.map(Number)})`)
         .getMany()
     }
-    const message = await this.baseModelService.create<Message>('Message', { ...data, cards })
+    console.log('cards', cards)
+    delete data.cardIds
+
+    const message = await this.baseModelService.create<Message>('Message', { ...data })
+    if (cards.length > 0) {
+      message.cards = cards
+      await getRepository<Message>('Message').save(message)
+    }
 
     await pubSub.publish(topic, message)
 
@@ -91,7 +99,7 @@ export class MessageResolver {
   async cards(@Root() message: Message): Promise<Card[] | undefined> {
     return await getRepository<Card>('Card')
       .createQueryBuilder('card')
-      .innerJoin('messages_cards', 'mc', 'card.id = mc.cardsId AND mc.messagesId = :messageId', {
+      .innerJoin('messages_cards', 'mc', 'card.id = mc.cardId AND mc.messageId = :messageId', {
         messageId: message.id,
       })
       .getMany()

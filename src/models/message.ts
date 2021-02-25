@@ -43,8 +43,12 @@ export class Message extends BaseEntity {
   @Column('text')
   text!: string
 
-  @ManyToMany(() => Card, (card) => card.messages, { onDelete: 'SET NULL' })
-  @JoinTable({ name: 'messages_cards' })
+  @ManyToMany(() => Card, { onDelete: 'SET NULL' })
+  @JoinTable({
+    name: 'messages_cards',
+    joinColumns: [{ name: 'messageId' }],
+    inverseJoinColumns: [{ name: 'cardId' }],
+  })
   cards: Card[]
 }
 

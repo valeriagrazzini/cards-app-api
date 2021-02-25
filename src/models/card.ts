@@ -1,10 +1,9 @@
 import { ObjectType, Field, ID, Int, InputType } from 'type-graphql'
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { BaseEntity } from './_baseEntity'
 import { Set } from './set'
 import { CardLocalization } from './cardLocalization'
 import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
-import { Message } from './message'
 
 @ObjectType()
 @Entity('cards')
@@ -49,10 +48,6 @@ export class Card extends BaseEntity {
 
   @OneToMany(() => CardLocalization, (cardLocalization) => cardLocalization.card)
   localizations!: CardLocalization[]
-
-  @ManyToMany(() => Message, (message) => message.cards)
-  @JoinTable({ name: 'messages_cards' })
-  messages: Message[]
 }
 
 @InputType()
