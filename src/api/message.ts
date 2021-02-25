@@ -10,9 +10,10 @@ import {
   Root,
   PubSubEngine,
   FieldResolver,
+  Int,
 } from 'type-graphql'
 import { Inject, Service } from 'typedi'
-import { Message, MessageCreateInput, MessageFilterInput } from '../models/message'
+import { Message, MessageCreateInput, MessageFilterInput, MessagePaginatedResult } from '../models/message'
 import { User } from '../models/user'
 import { getRepository } from 'typeorm'
 import { Card } from '../models/card'
@@ -38,6 +39,17 @@ export class MessageResolver {
     console.log('filters', filters)
     const messages = await this.baseModelService.findAll<Message>('Message', filters)
     return messages
+  }
+
+  @Query(() => MessagePaginatedResult)
+  async messagesPaginated(
+    @Arg('offset', () => Int) offset: number,
+    @Arg('take', () => Int) take: number,
+    @Arg('filters', () => MessageFilterInput, { nullable: true }) filters?: MessageFilterInput
+  ): Promise<MessagePaginatedResult> {
+    const result = await this.baseModelService.findAllPaginated<Message>('Message', offset, take, filters)
+
+    return result
   }
 
   //@Authorized(['ADMIN'])

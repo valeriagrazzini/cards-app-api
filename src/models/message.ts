@@ -4,7 +4,7 @@ import { Card } from './card'
 import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
-import { BaseFilterInput } from './_baseInputTypes'
+import { BaseFilterInput, BasePaginatedResult } from './_baseInputTypes'
 
 @ObjectType()
 @Entity('messages')
@@ -81,4 +81,10 @@ export class MessageFilterInput extends BaseFilterInput {
 
   @Field(() => ID, { nullable: true })
   receiverUserId?: number
+}
+
+@ObjectType()
+export class MessagePaginatedResult extends BasePaginatedResult {
+  @Field(() => [Message])
+  data: Message[]
 }
