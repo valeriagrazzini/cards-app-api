@@ -81,6 +81,11 @@ export class MessageResolver {
 
   @FieldResolver(() => [Card], { nullable: true })
   async cards(@Root() message: Message): Promise<Card[] | undefined> {
-    return await message.cards
+    return getRepository<Card>('Card')
+      .createQueryBuilder('card')
+      .innerJoin('messages_cards', 'mc', '(mc.cardsId = card.id AND mc.messagesId = :messageId)', {
+        messageId: message.id,
+      })
+      .getMany()
   }
 }

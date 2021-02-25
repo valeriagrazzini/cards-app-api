@@ -1,6 +1,6 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
-import { Card } from './card'
+import { Card, CardCreateInput, CardUpdateInput } from './card'
 import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
@@ -45,7 +45,7 @@ export class Message extends BaseEntity {
 
   @ManyToMany(() => Card, (card) => card.messages, { onDelete: 'SET NULL' })
   @JoinTable({ name: 'messages_cards' })
-  cards: Promise<Card[]>
+  cards: Card[]
 }
 
 @InputType()
@@ -62,6 +62,9 @@ export class MessageCreateInput {
   @Field()
   @Column('text')
   text!: string
+
+  @Field(() => [CardCreateInput], { nullable: true })
+  cards?: CardCreateInput[]
 }
 
 @InputType()
@@ -74,4 +77,7 @@ export class MessageFilterInput extends BaseFilterInput {
 
   @Field(() => ID, { nullable: true })
   receiverUserId?: number
+
+  @Field(() => [CardUpdateInput], { nullable: true })
+  cards?: CardUpdateInput[]
 }
