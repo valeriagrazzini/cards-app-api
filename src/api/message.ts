@@ -15,6 +15,7 @@ import { Inject, Service } from 'typedi'
 import { Message, MessageCreateInput, MessageFilterInput } from '../models/message'
 import { User } from '../models/user'
 import { getRepository } from 'typeorm'
+import { Card } from '../models/card'
 const topic = 'MESSAGES'
 @Service()
 @Resolver(Message)
@@ -76,5 +77,10 @@ export class MessageResolver {
   @FieldResolver(() => User, { nullable: true })
   async receiverUser(@Root() message: Message): Promise<User | undefined> {
     return await getRepository<User>('User').findOne(message.receiverUserId)
+  }
+
+  @FieldResolver(() => [Card], { nullable: true })
+  async cards(@Root() message: Message): Promise<Card[] | undefined> {
+    return await message.cards
   }
 }

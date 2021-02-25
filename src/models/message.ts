@@ -1,5 +1,6 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
-import { Column, Entity, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
+import { Card } from './card'
 import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
@@ -41,6 +42,10 @@ export class Message extends BaseEntity {
   @Field()
   @Column('text')
   text!: string
+
+  @ManyToMany(() => Card, (card) => card.messages, { onDelete: 'SET NULL' })
+  @JoinTable({ name: 'messages_cards' })
+  cards: Promise<Card[]>
 }
 
 @InputType()
