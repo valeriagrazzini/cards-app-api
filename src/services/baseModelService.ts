@@ -30,7 +30,7 @@ export class BaseModelService {
       .where({ ...filters })
       .take(take)
       .skip(offset * take)
-      .orderBy(JSON.parse(JSON.stringify(order)))
+      .orderBy(order ? JSON.parse(JSON.stringify(order)) : undefined)
       .getManyAndCount()
 
     const result = {
