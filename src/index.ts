@@ -9,7 +9,6 @@ import { CardResolver } from './api/card'
 import { SetResolver } from './api/set'
 import { SetLocalizationResolver } from './api/setLocalization'
 import Container from 'typedi'
-import { CardService } from './services/cardService'
 import { CardLocalizationResolver } from './api/cardLocalization'
 import { UserResolver } from './api/user'
 import { UserCardTradeProposalResolver } from './api/userCardTradeProposal'
@@ -23,14 +22,9 @@ import { MessageResolver } from './api/message'
 import { ChatResolver } from './api/chat'
 require('dotenv').config()
 
-const configuration = require('../config.json')
-
 async function start(): Promise<void> {
   // TYPEORM CONNECTION
   await DbManager.createConnection()
-
-  // SET CONFIGURATIONS ..
-  Container.get(CardService).setConfiguration(configuration)
 
   // GRAPHQL SCHEMA CREATION
   const schema = await buildSchema({

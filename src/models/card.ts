@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
 import { BaseEntity } from './_baseEntity'
 import { Set } from './set'
 import { CardLocalization } from './cardLocalization'
-import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
+import { BaseFilterInput, BaseOrderInput, BaseUpdateInput, Sorting } from './_baseInputTypes'
 
 @ObjectType()
 @Entity('cards')
@@ -106,18 +106,18 @@ export class CardUpdateInput extends BaseUpdateInput {
 
 @InputType()
 export class CardFilterInput extends BaseFilterInput {
-  @Field({ nullable: true })
-  name?: string
+  @Field(() => [ID], { nullable: true })
+  ids?: number[]
 
   @Field(() => ID, { nullable: true })
   setId?: number
+}
 
-  @Field(() => Int, { nullable: true })
-  rating?: number
+@InputType()
+export class CardOrderInput extends BaseOrderInput {
+  @Field(() => Sorting, { nullable: true })
+  setId?: Sorting
 
-  @Field(() => Boolean, { nullable: true })
-  isGold?: boolean
-
-  @Field(() => Int, { nullable: true })
-  stars?: number
+  @Field(() => Sorting, { nullable: true })
+  order?: Sorting
 }
