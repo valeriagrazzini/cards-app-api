@@ -4,7 +4,7 @@ import { Card } from './card'
 import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
-import { BaseFilterInput, BasePaginatedResult } from './_baseInputTypes'
+import { BaseFilterInput, BaseOrderInput, BasePaginatedResult, Sorting } from './_baseInputTypes'
 
 @ObjectType()
 @Entity('messages')
@@ -81,6 +81,15 @@ export class MessageFilterInput extends BaseFilterInput {
 
   @Field(() => ID, { nullable: true })
   receiverUserId?: number
+}
+
+@InputType()
+export class MessageSortInput extends BaseOrderInput {
+  @Field(() => Sorting, { nullable: true })
+  id?: Sorting
+
+  @Field(() => Sorting, { nullable: true })
+  createdAt?: Sorting
 }
 
 @ObjectType()

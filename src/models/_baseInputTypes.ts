@@ -41,7 +41,7 @@ export enum Sorting {
   ASC = 'ASC',
   DESC = 'DESC',
 }
-registerEnumType(Languages, {
+registerEnumType(Sorting, {
   name: 'Sorting',
   description: 'Sortings types',
 })

@@ -13,7 +13,13 @@ import {
   Int,
 } from 'type-graphql'
 import { Inject, Service } from 'typedi'
-import { Message, MessageCreateInput, MessageFilterInput, MessagePaginatedResult } from '../models/message'
+import {
+  Message,
+  MessageCreateInput,
+  MessageFilterInput,
+  MessagePaginatedResult,
+  MessageSortInput,
+} from '../models/message'
 import { User } from '../models/user'
 import { getRepository } from 'typeorm'
 import { Card } from '../models/card'
@@ -45,9 +51,10 @@ export class MessageResolver {
   async messagesPaginated(
     @Arg('offset', () => Int) offset: number,
     @Arg('take', () => Int) take: number,
-    @Arg('filters', () => MessageFilterInput, { nullable: true }) filters?: MessageFilterInput
+    @Arg('filters', () => MessageFilterInput, { nullable: true }) filters?: MessageFilterInput,
+    @Arg('sort', () => MessageSortInput, { nullable: true }) sort?: MessageSortInput
   ): Promise<MessagePaginatedResult> {
-    const result = await this.baseModelService.findAllPaginated<Message>('Message', offset, take, filters)
+    const result = await this.baseModelService.findAllPaginated<Message>('Message', offset, take, filters, sort)
 
     return result
   }

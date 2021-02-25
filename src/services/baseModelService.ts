@@ -1,3 +1,4 @@
+import { BaseOrderInput } from '@/models/_baseInputTypes'
 import { Service } from 'typedi'
 import { getRepository } from 'typeorm'
 
@@ -17,12 +18,19 @@ export class BaseModelService {
     return await getRepository<TModel>(modelName).find({ where: { ...filters } })
   }
 
-  async findAllPaginated<TModel>(modelName: string, offset: number, take: number, filters?: any): Promise<any> {
+  async findAllPaginated<TModel>(
+    modelName: string,
+    offset: number,
+    take: number,
+    filters?: any,
+    order?: BaseOrderInput
+  ): Promise<any> {
     const [rows, total] = await getRepository<TModel>(modelName)
       .createQueryBuilder('model')
       .where({ ...filters })
       .take(take)
       .skip(offset * take)
+      .orderBy(JSON.parse(JSON.stringify(order)))
       .getManyAndCount()
 
     const result = {
