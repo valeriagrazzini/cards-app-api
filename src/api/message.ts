@@ -46,7 +46,15 @@ export class MessageResolver {
     @Arg('data', () => MessageCreateInput) data: MessageCreateInput,
     @PubSub() pubSub: PubSubEngine
   ): Promise<Message> {
-    const message = await this.baseModelService.create<Message>('Message', data)
+    let cards: Card[] = []
+    if (data.cardIds && data.cardIds.length > 0) {
+      cards = await getRepository<Card>('Card')
+        .createQueryBuilder('card')
+        .where(`card.id IN (${data.cardIds.map(Number)})`)
+        .getMany()
+    }
+    const message = await this.baseModelService.create<Message>('Message', { ...data, cards })
+
     await pubSub.publish(topic, message)
 
     return message
@@ -81,9 +89,9 @@ export class MessageResolver {
 
   @FieldResolver(() => [Card], { nullable: true })
   async cards(@Root() message: Message): Promise<Card[] | undefined> {
-    return getRepository<Card>('Card')
+    return await getRepository<Card>('Card')
       .createQueryBuilder('card')
-      .innerJoin('messages_cards', 'mc', '(mc.cardsId = card.id AND mc.messagesId = :messageId)', {
+      .innerJoin('messages_cards', 'mc', 'card.id = mc.cardsId AND mc.messagesId = :messageId', {
         messageId: message.id,
       })
       .getMany()

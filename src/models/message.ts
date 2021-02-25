@@ -1,6 +1,6 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
 import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm'
-import { Card, CardCreateInput, CardUpdateInput } from './card'
+import { Card } from './card'
 import { Chat } from './chat'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
@@ -63,8 +63,8 @@ export class MessageCreateInput {
   @Column('text')
   text!: string
 
-  @Field(() => [CardCreateInput], { nullable: true })
-  cards?: CardCreateInput[]
+  @Field(() => [ID], { nullable: true })
+  cardIds?: number[]
 }
 
 @InputType()
@@ -77,7 +77,4 @@ export class MessageFilterInput extends BaseFilterInput {
 
   @Field(() => ID, { nullable: true })
   receiverUserId?: number
-
-  @Field(() => [CardUpdateInput], { nullable: true })
-  cards?: CardUpdateInput[]
 }
