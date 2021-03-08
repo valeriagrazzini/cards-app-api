@@ -1,18 +1,7 @@
 import { BaseModelService } from '../services/baseModelService'
-import {
-  Resolver,
-  Query,
-  Arg,
-  ID,
-  Mutation,
-  Subscription,
-  PubSub,
-  Root,
-  PubSubEngine,
-  FieldResolver,
-} from 'type-graphql'
+import { Resolver, Query, Arg, ID, Mutation, Subscription, Root, FieldResolver } from 'type-graphql'
 import { Inject, Service } from 'typedi'
-import { Chat, ChatCreateInput, ChatFilterInput } from '../models/chat'
+import { Chat, ChatCreateInput, ChatFilterInput, ChatUpdateInput } from '../models/chat'
 import { User } from '../models/user'
 import { getRepository } from 'typeorm'
 const topic = 'MESSAGES'
@@ -38,13 +27,14 @@ export class ChatResolver {
 
   //@Authorized(['ADMIN'])
   @Mutation(() => Chat)
-  async createChat(
-    @Arg('data', () => ChatCreateInput) data: ChatCreateInput,
-    @PubSub() pubSub: PubSubEngine
-  ): Promise<Chat> {
+  async createChat(@Arg('data', () => ChatCreateInput) data: ChatCreateInput): Promise<Chat> {
     const chat = await this.baseModelService.create<Chat>('Chat', data)
-    await pubSub.publish(topic, chat)
+    return chat
+  }
 
+  @Mutation(() => Chat)
+  async updateChat(@Arg('data', () => ChatUpdateInput) data: ChatUpdateInput): Promise<Chat> {
+    const chat = await this.baseModelService.update<Chat>('Chat', data)
     return chat
   }
 

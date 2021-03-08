@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne, OneToMany, Unique } from 'typeorm'
 import { Message } from './message'
 import { User } from './user'
 import { BaseEntity } from './_baseEntity'
-import { BaseFilterInput } from './_baseInputTypes'
+import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
 
 @ObjectType()
 @Unique('chats_index', ['creatorUserId', 'receiverUserId'])
@@ -22,6 +22,10 @@ export class Chat extends BaseEntity {
   @Field(() => ID)
   @Column()
   receiverUserId!: number
+
+  @Field(() => Boolean)
+  @Column({ default: false })
+  blocked!: boolean
 
   @ManyToOne(() => User, (user) => user.receivedChats, {
     onDelete: 'CASCADE',
@@ -43,10 +47,19 @@ export class ChatCreateInput {
 }
 
 @InputType()
+export class ChatUpdateInput extends BaseUpdateInput {
+  @Field(() => Boolean)
+  blocked!: boolean
+}
+
+@InputType()
 export class ChatFilterInput extends BaseFilterInput {
   @Field(() => ID, { nullable: true })
   creatorUserId?: number
 
   @Field(() => ID, { nullable: true })
   receiverUserId?: number
+
+  @Field(() => Boolean, { nullable: true })
+  blocked?: boolean
 }
