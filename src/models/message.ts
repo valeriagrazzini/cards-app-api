@@ -43,7 +43,7 @@ export class Message extends BaseEntity {
   @Column('text')
   text!: string
 
-  @ManyToMany(() => Card, { onDelete: 'SET NULL' })
+  @ManyToMany(() => Card, { onDelete: 'CASCADE' })
   @JoinTable({
     name: 'messages_cards',
     joinColumns: [{ name: 'messageId' }],
