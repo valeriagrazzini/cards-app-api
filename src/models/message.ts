@@ -17,7 +17,7 @@ export class Message extends BaseEntity {
     onDelete: 'CASCADE',
     eager: false,
   })
-  chat!: Promise<Chat>
+  chat!: Chat
 
   @Field(() => ID)
   @Column()
