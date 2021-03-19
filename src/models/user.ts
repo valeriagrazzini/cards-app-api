@@ -6,7 +6,7 @@ import { UserCardTradeProposal } from './userCardTradeProposal'
 import { BaseEntity } from './_baseEntity'
 import { BaseUpdateInput, BaseFilterInput, BasePaginatedResult, Languages } from './_baseInputTypes'
 import { UserCardToDonate } from './userCardToDonate'
-import { CardTradeRequest } from './cardTradeRequest'
+import { UserCardTradeRequest } from './userCardTradeRequest'
 import { Message } from './message'
 import { Chat } from './chat'
 
@@ -63,8 +63,8 @@ export class User extends BaseEntity implements UserI {
   @OneToMany(() => UserCardTradeProposal, (userCardTradeProposal) => userCardTradeProposal.user)
   tradeProposals!: Promise<UserCardTradeProposal[]>
 
-  @OneToMany(() => CardTradeRequest, (cardTradeRequest) => cardTradeRequest.user)
-  tradeRequests!: Promise<CardTradeRequest[]>
+  @OneToMany(() => UserCardTradeRequest, (cardTradeRequest) => cardTradeRequest.user)
+  tradeRequests!: Promise<UserCardTradeRequest[]>
 
   @OneToMany(() => UserCardToDonate, (userCardToDonate) => userCardToDonate.user)
   cardsToDonate!: Promise<UserCardToDonate[]>

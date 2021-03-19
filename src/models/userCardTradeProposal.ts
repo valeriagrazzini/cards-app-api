@@ -1,10 +1,11 @@
 import { ObjectType, Field, InputType, ID } from 'type-graphql'
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany } from 'typeorm'
-import { Card } from './card'
-import { CardTradeRequest } from './cardTradeRequest'
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm'
+import { UserCardTradeRequest } from './userCardTradeRequest'
 import { User } from './user'
+import { CardTradeOffer, CardTradeOfferCreateInput, CardTradeOfferUpdateInput } from './cardTradeOffer'
 import { BaseEntity } from './_baseEntity'
 import { BaseFilterInput, BaseUpdateInput } from './_baseInputTypes'
+import { CardTradeRequest, CardTradeRequestCreateInput, CardTradeRequestUpdateInput } from './cardTradeRequest'
 
 @ObjectType()
 @Entity('userCardTradeProposals')
@@ -19,24 +20,14 @@ export class UserCardTradeProposal extends BaseEntity {
   })
   user!: User
 
-  @ManyToMany(() => Card, { eager: false, cascade: true, onDelete: 'SET NULL' })
-  @JoinTable({
-    name: 'userCardTradeProposalsOffered_cards',
-    joinColumns: [{ name: 'userCardTradeProposalId' }],
-    inverseJoinColumns: [{ name: 'cardId' }],
-  })
-  cardsOffered?: Promise<Card[]>
+  @OneToMany(() => CardTradeOffer, (cardTradeOffer) => cardTradeOffer.cardTradeProposal)
+  cardsOffered!: Promise<CardTradeOffer[]>
 
-  @ManyToMany(() => Card, { eager: false, cascade: true, onDelete: 'SET NULL' })
-  @JoinTable({
-    name: 'userCardTradeProposalsRequested_cards',
-    joinColumns: [{ name: 'userCardTradeProposalId' }],
-    inverseJoinColumns: [{ name: 'cardId' }],
-  })
-  cardsRequested?: Promise<Card[]>
+  @OneToMany(() => CardTradeRequest, (cardTraderequest) => cardTraderequest.cardTradeProposal)
+  cardsRequested!: Promise<CardTradeRequest[]>
 
-  @OneToMany(() => CardTradeRequest, (cardTradeRequest) => cardTradeRequest.userCardTradeProposal)
-  tradeRequests!: Promise<CardTradeRequest[]>
+  @OneToMany(() => UserCardTradeRequest, (userCardTradeRequest) => userCardTradeRequest.userCardTradeProposal)
+  tradeRequests!: Promise<UserCardTradeRequest[]>
 }
 
 @InputType()
@@ -44,11 +35,11 @@ export class UserCardTradeProposalCreateInput {
   @Field(() => ID)
   userId!: number
 
-  @Field(() => [ID])
-  cardsOfferedIds!: number[]
+  @Field(() => [CardTradeOfferCreateInput])
+  cardsOffered!: CardTradeOfferCreateInput[]
 
-  @Field(() => [ID])
-  cardsRequestedIds!: number[]
+  @Field(() => [CardTradeRequestCreateInput])
+  cardsRequested!: CardTradeRequestCreateInput[]
 }
 
 @InputType()
@@ -56,11 +47,11 @@ export class UserCardTradeProposalUpdateInput extends BaseUpdateInput {
   @Field(() => ID, { nullable: true })
   userId?: number
 
-  @Field(() => [ID], { nullable: true })
-  cardsOfferedIds?: number[]
+  @Field(() => [CardTradeOfferUpdateInput], { nullable: true })
+  cardsOffered?: CardTradeOfferUpdateInput[]
 
-  @Field(() => [ID], { nullable: true })
-  cardsRequestedIds?: number[]
+  @Field(() => [CardTradeRequestUpdateInput], { nullable: true })
+  cardsRequested?: CardTradeRequestUpdateInput[]
 }
 
 @InputType()

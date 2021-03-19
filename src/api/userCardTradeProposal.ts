@@ -1,25 +1,27 @@
-import { BaseModelService } from '../services/baseModelService'
 import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root } from 'type-graphql'
 import { Inject, Service } from 'typedi'
-import { Card } from '../models/card'
 import {
   UserCardTradeProposal,
   UserCardTradeProposalCreateInput,
   UserCardTradeProposalFilterInput,
   UserCardTradeProposalUpdateInput,
 } from '../models/userCardTradeProposal'
+import { CardTradeOffer } from '../models/cardTradeOffer'
+import { CardTradeRequest } from '../models/cardTradeRequest'
+import { UserCardTradeProposalService } from '../services/userCardTradeProposalService'
+import { getRepository } from 'typeorm'
 
 @Service()
 @Resolver(UserCardTradeProposal)
 export class UserCardTradeProposalResolver {
   @Inject()
-  private baseModelService: BaseModelService
+  private service: UserCardTradeProposalService
 
   //@Authorized()
   @Query(() => UserCardTradeProposal, { nullable: true })
   async userCardTradeProposal(@Arg('id', () => ID) id: number): Promise<UserCardTradeProposal | undefined> {
-    const card = await this.baseModelService.findOne<UserCardTradeProposal>('UserCardTradeProposal', id)
-    return card
+    const result = await this.service.findOne(id)
+    return result
   }
 
   //@Authorized()
@@ -27,8 +29,8 @@ export class UserCardTradeProposalResolver {
   async userCardTradeProposals(
     @Arg('data', () => UserCardTradeProposalFilterInput, { nullable: true }) data?: UserCardTradeProposalFilterInput
   ): Promise<UserCardTradeProposal[]> {
-    const cards = await this.baseModelService.findAll<UserCardTradeProposal>('UserCardTradeProposal', data)
-    return cards
+    const result = await this.service.findAll(data)
+    return result
   }
 
   //@Authorized(['ADMIN'])
@@ -36,35 +38,39 @@ export class UserCardTradeProposalResolver {
   async createUserCardTradeProposal(
     @Arg('data', () => UserCardTradeProposalCreateInput) data: UserCardTradeProposalCreateInput
   ): Promise<UserCardTradeProposal> {
-    const card = await this.baseModelService.create<UserCardTradeProposal>('UserCardTradeProposal', data)
-    return card
+    const result = await this.service.create(data)
+    return result
   }
 
   //@Authorized(['ADMIN'])
   @Mutation(() => UserCardTradeProposal)
   async updateUserCardTradeProposal(
     @Arg('data', () => UserCardTradeProposalUpdateInput) data: UserCardTradeProposalUpdateInput
-  ): Promise<Card> {
-    const card = await this.baseModelService.update<Card>('Card', data)
-    return card
+  ): Promise<UserCardTradeProposal> {
+    const result = await this.service.update(data)
+    return result
   }
 
   //@Authorized(['ADMIN'])
   @Mutation(() => Boolean)
   async deleteUserCardTradeProposal(@Arg('id', () => ID) id: number): Promise<boolean> {
-    const card = await this.baseModelService.delete<UserCardTradeProposal>('UserCardTradeProposal', id)
-    return card
+    const result = await this.service.delete(id)
+    return result
   }
 
-  @FieldResolver(() => [Card])
-  async cardsOffered(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card[]> {
-    const cardsOffered = await userCardTradeProposal.cardsOffered
-    return cardsOffered ? cardsOffered : []
+  @FieldResolver(() => [CardTradeOffer])
+  async cardsOffered(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<CardTradeOffer[]> {
+    const result = await getRepository<CardTradeOffer>('CardTradeOffer').find({
+      where: { cardTradeProposalId: userCardTradeProposal.id },
+    })
+    return result
   }
 
-  @FieldResolver(() => [Card])
-  async cardsRequested(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<Card[]> {
-    const cardsRequested = await userCardTradeProposal.cardsRequested
-    return cardsRequested ? cardsRequested : []
+  @FieldResolver(() => [CardTradeRequest])
+  async cardsRequested(@Root() userCardTradeProposal: UserCardTradeProposal): Promise<CardTradeRequest[]> {
+    const result = await getRepository<CardTradeRequest>('CardTradeRequest').find({
+      where: { cardTradeProposalId: userCardTradeProposal.id },
+    })
+    return result
   }
 }

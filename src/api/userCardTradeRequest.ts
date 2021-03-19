@@ -2,50 +2,50 @@ import { CardTradeRequestService } from '../services/cardTradeRequestService'
 import { Resolver, Query, Arg, ID, Mutation, FieldResolver, Root } from 'type-graphql'
 import { Inject, Service } from 'typedi'
 import {
-  CardTradeRequest,
-  CardTradeRequestCreateInput,
-  CardTradeRequestFilterInput,
-  CardTradeRequestUpdateInput,
-} from '../models/cardTradeRequest'
+  UserCardTradeRequest,
+  UserCardTradeRequestCreateInput,
+  UserCardTradeRequestFilterInput,
+  UserCardTradeRequestUpdateInput,
+} from '../models/userCardTradeRequest'
 import { User } from '../models/user'
 import { UserCardTradeProposal } from '../models/userCardTradeProposal'
 
 @Service()
-@Resolver(CardTradeRequest)
-export class CardTradeRequestResolver {
+@Resolver(UserCardTradeRequest)
+export class UserCardTradeRequestResolver {
   @Inject()
   private cardTradeRequestService: CardTradeRequestService
 
   //@Authorized()
-  @Query(() => CardTradeRequest, { nullable: true })
-  async cardTradeRequest(@Arg('id', () => ID) id: number): Promise<CardTradeRequest | undefined> {
+  @Query(() => UserCardTradeRequest, { nullable: true })
+  async cardTradeRequest(@Arg('id', () => ID) id: number): Promise<UserCardTradeRequest | undefined> {
     const cardTradeRequest = await this.cardTradeRequestService.findOne(id)
     return cardTradeRequest
   }
 
   //@Authorized()
-  @Query(() => [CardTradeRequest])
+  @Query(() => [UserCardTradeRequest])
   async cardTradeRequests(
-    @Arg('data', () => CardTradeRequestFilterInput, { nullable: true }) data?: CardTradeRequestFilterInput
-  ): Promise<CardTradeRequest[]> {
+    @Arg('data', () => UserCardTradeRequestFilterInput, { nullable: true }) data?: UserCardTradeRequestFilterInput
+  ): Promise<UserCardTradeRequest[]> {
     const tradeRequests = await this.cardTradeRequestService.findAll(data)
     return tradeRequests
   }
 
   //@Authorized(['ADMIN'])
-  @Mutation(() => CardTradeRequest)
+  @Mutation(() => UserCardTradeRequest)
   async createCardTradeRequest(
-    @Arg('data', () => CardTradeRequestCreateInput) data: CardTradeRequestCreateInput
-  ): Promise<CardTradeRequest> {
+    @Arg('data', () => UserCardTradeRequestCreateInput) data: UserCardTradeRequestCreateInput
+  ): Promise<UserCardTradeRequest> {
     const cardTradeRequest = await this.cardTradeRequestService.create(data)
     return cardTradeRequest
   }
 
   //@Authorized(['ADMIN'])
-  @Mutation(() => CardTradeRequest)
+  @Mutation(() => UserCardTradeRequest)
   async updateCardTradeRequest(
-    @Arg('data', () => CardTradeRequestUpdateInput) data: CardTradeRequestUpdateInput
-  ): Promise<CardTradeRequest> {
+    @Arg('data', () => UserCardTradeRequestUpdateInput) data: UserCardTradeRequestUpdateInput
+  ): Promise<UserCardTradeRequest> {
     const cardTradeRequest = await this.cardTradeRequestService.update(data)
     return cardTradeRequest
   }
@@ -58,12 +58,12 @@ export class CardTradeRequestResolver {
   }
 
   @FieldResolver(() => User)
-  async user(@Root() cardTradeRequest: CardTradeRequest): Promise<User> {
+  async user(@Root() cardTradeRequest: UserCardTradeRequest): Promise<User> {
     return await cardTradeRequest.user
   }
 
   @FieldResolver(() => UserCardTradeProposal)
-  async proposal(@Root() cardTradeRequest: CardTradeRequest): Promise<UserCardTradeProposal> {
+  async proposal(@Root() cardTradeRequest: UserCardTradeRequest): Promise<UserCardTradeProposal> {
     return await cardTradeRequest.userCardTradeProposal
   }
 }

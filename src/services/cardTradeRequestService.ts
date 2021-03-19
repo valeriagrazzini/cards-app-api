@@ -1,9 +1,9 @@
 import {
-  CardTradeRequest,
-  CardTradeRequestFilterInput,
-  CardTradeRequestCreateInput,
-  CardTradeRequestUpdateInput,
-} from '../models/cardTradeRequest'
+  UserCardTradeRequest,
+  UserCardTradeRequestFilterInput,
+  UserCardTradeRequestCreateInput,
+  UserCardTradeRequestUpdateInput,
+} from '../models/userCardTradeRequest'
 import Container, { Service } from 'typedi'
 import { BaseModelService } from './baseModelService'
 
@@ -15,34 +15,49 @@ export class CardTradeRequestService {
     this._requestDurationInMinutes = configuration.cardTradeRequestDurationInMinutes
   }
 
-  async findOne(id: number): Promise<CardTradeRequest | undefined> {
-    const cardTradeRequest = await Container.get(BaseModelService).findOne<CardTradeRequest>('CardTradeRequest', id)
+  async findOne(id: number): Promise<UserCardTradeRequest | undefined> {
+    const cardTradeRequest = await Container.get(BaseModelService).findOne<UserCardTradeRequest>(
+      'UserCardTradeRequest',
+      id
+    )
     return cardTradeRequest
   }
 
-  async findAll(data?: CardTradeRequestFilterInput): Promise<CardTradeRequest[]> {
-    const cardTradeRequests = await Container.get(BaseModelService).findAll<CardTradeRequest>('CardTradeRequest', data)
+  async findAll(data?: UserCardTradeRequestFilterInput): Promise<UserCardTradeRequest[]> {
+    const cardTradeRequests = await Container.get(BaseModelService).findAll<UserCardTradeRequest>(
+      'UserCardTradeRequest',
+      data
+    )
     return cardTradeRequests
   }
 
-  async create(data: CardTradeRequestCreateInput): Promise<CardTradeRequest> {
+  async create(data: UserCardTradeRequestCreateInput): Promise<UserCardTradeRequest> {
     const now = new Date()
-    const cardTradeRequest = await Container.get(BaseModelService).create<CardTradeRequest>('CardTradeRequest', {
-      ...data,
-      expiresAt: new Date(now.getTime() + this._requestDurationInMinutes * 60000),
-    })
+    const cardTradeRequest = await Container.get(BaseModelService).create<UserCardTradeRequest>(
+      'UserCardTradeRequest',
+      {
+        ...data,
+        expiresAt: new Date(now.getTime() + this._requestDurationInMinutes * 60000),
+      }
+    )
     return cardTradeRequest
   }
 
-  async update(data: CardTradeRequestUpdateInput): Promise<CardTradeRequest> {
-    const cardTradeRequest = await Container.get(BaseModelService).create<CardTradeRequest>('CardTradeRequest', {
-      ...data,
-    })
+  async update(data: UserCardTradeRequestUpdateInput): Promise<UserCardTradeRequest> {
+    const cardTradeRequest = await Container.get(BaseModelService).create<UserCardTradeRequest>(
+      'UserCardTradeRequest',
+      {
+        ...data,
+      }
+    )
     return cardTradeRequest
   }
 
   async delete(id: number): Promise<boolean> {
-    const cardTradeRequest = await Container.get(BaseModelService).delete<CardTradeRequest>('CardTradeRequest', id)
+    const cardTradeRequest = await Container.get(BaseModelService).delete<UserCardTradeRequest>(
+      'UserCardTradeRequest',
+      id
+    )
     return cardTradeRequest
   }
 }

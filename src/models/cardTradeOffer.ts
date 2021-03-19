@@ -7,8 +7,8 @@ import { BaseEntity } from './_baseEntity'
 import { BaseFilterInput } from './_baseInputTypes'
 
 @ObjectType()
-@Entity('cardTradeRequests')
-export class CardTradeRequest extends BaseEntity {
+@Entity('cardTradeOffers')
+export class CardTradeOffer extends BaseEntity {
   @Field(() => ID)
   @Column('int')
   cardTradeProposalId!: number
@@ -21,13 +21,13 @@ export class CardTradeRequest extends BaseEntity {
   @Column('int')
   quantity!: number
 
-  @ManyToOne(() => UserCardTradeProposal, (uctp) => uctp.cardsRequested, {
+  @ManyToOne(() => UserCardTradeProposal, (uctp) => uctp.cardsOffered, {
     onDelete: 'CASCADE',
     eager: false,
   })
   cardTradeProposal!: UserCardTradeProposal
 
-  @ManyToOne(() => Card, (card) => card.tradeCardsRequested, {
+  @ManyToOne(() => Card, (card) => card.tradeCardsOffered, {
     onDelete: 'CASCADE',
     eager: false,
   })
@@ -35,7 +35,7 @@ export class CardTradeRequest extends BaseEntity {
 }
 
 @InputType()
-export class CardTradeRequestCreateInput {
+export class CardTradeOfferCreateInput {
   @Field(() => ID, { nullable: true })
   cardTradeProposalId?: number
 
@@ -47,7 +47,7 @@ export class CardTradeRequestCreateInput {
 }
 
 @InputType()
-export class CardTradeRequestUpdateInput {
+export class CardTradeOfferUpdateInput {
   @Field(() => ID, { nullable: true })
   id?: number
 
@@ -62,7 +62,7 @@ export class CardTradeRequestUpdateInput {
 }
 
 @InputType()
-export class CardTradeRequestFilterInput extends BaseFilterInput {
+export class CardTradeOfferFilterInput extends BaseFilterInput {
   @Field(() => ID, { nullable: true })
   cardTradeProposalId?: number
 

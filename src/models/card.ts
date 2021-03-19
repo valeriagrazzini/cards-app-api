@@ -4,6 +4,8 @@ import { BaseEntity } from './_baseEntity'
 import { Set } from './set'
 import { CardLocalization } from './cardLocalization'
 import { BaseFilterInput, BaseOrderInput, BaseUpdateInput, Sorting } from './_baseInputTypes'
+import { CardTradeOffer } from './cardTradeOffer'
+import { CardTradeRequest } from './cardTradeRequest'
 
 @ObjectType()
 @Entity('cards')
@@ -48,6 +50,12 @@ export class Card extends BaseEntity {
 
   @OneToMany(() => CardLocalization, (cardLocalization) => cardLocalization.card)
   localizations!: CardLocalization[]
+
+  @OneToMany(() => CardTradeOffer, (cardTradeOffer) => cardTradeOffer.card)
+  tradeCardsOffered?: CardTradeOffer[]
+
+  @OneToMany(() => CardTradeRequest, (cardTradeRequest) => cardTradeRequest.card)
+  tradeCardsRequested?: CardTradeRequest[]
 }
 
 @InputType()
