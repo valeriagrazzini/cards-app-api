@@ -27,9 +27,10 @@ export class UserCardTradeProposalResolver {
   //@Authorized()
   @Query(() => [UserCardTradeProposal])
   async userCardTradeProposals(
-    @Arg('data', () => UserCardTradeProposalFilterInput, { nullable: true }) data?: UserCardTradeProposalFilterInput
+    @Arg('filters', () => UserCardTradeProposalFilterInput, { nullable: true })
+    filters?: UserCardTradeProposalFilterInput
   ): Promise<UserCardTradeProposal[]> {
-    const result = await this.service.findAll(data)
+    const result = await this.service.findAll(filters)
     return result
   }
 

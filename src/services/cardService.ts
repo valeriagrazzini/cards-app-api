@@ -13,8 +13,6 @@ export class CardService {
   }
 
   async findAll(filters?: CardFilterInput, order?: CardOrderInput): Promise<Card[]> {
-    console.log('filters', filters)
-
     const baseQuery = getRepository<Card>('Card').createQueryBuilder('card')
 
     if (filters) {

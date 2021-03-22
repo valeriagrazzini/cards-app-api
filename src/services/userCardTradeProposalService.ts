@@ -79,8 +79,6 @@ export class UserCardTradeProposalService {
 
       // UPDATE THE CARDS OFFERED
       if (data.cardsOffered) {
-        console.log('data.cardsOffered', data.cardsOffered)
-
         const repository = entityManager.getRepository<CardTradeOffer>('CardTradeOffer')
 
         for (let i = 0; i < data.cardsOffered.length; i++) {
@@ -132,7 +130,6 @@ export class UserCardTradeProposalService {
           }
         }
       }
-      console.log('proposal', proposal)
       return proposal
     })
     return result
