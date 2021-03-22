@@ -20,6 +20,8 @@ import express from 'express'
 import http from 'http'
 import { MessageResolver } from './api/message'
 import { ChatResolver } from './api/chat'
+import { CardTradeOfferResolver } from './api/cardTradeOffer'
+import { CardTradeRequestResolver } from './api/cardTradeRequest'
 require('dotenv').config()
 
 async function start(): Promise<void> {
@@ -39,6 +41,8 @@ async function start(): Promise<void> {
       SpinRequestResolver,
       MessageResolver,
       ChatResolver,
+      CardTradeOfferResolver,
+      CardTradeRequestResolver,
     ],
     authChecker,
     container: Container,
