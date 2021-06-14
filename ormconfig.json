@@ -1,16 +1,16 @@
 {
     "type": "postgres",
-    "host": "ec2-54-170-100-209.eu-west-1.compute.amazonaws.com",
+    "host": "host",
     "port": 5432,
-    "username": "clexxkgesulhhr",
-    "password":"326a1008745f352259f482139ef27fa091d5f3d03580cdc32428f9360c5b803d",
-    "database": "db277ajtm5e353",
+    "username": "username",
+    "password":"password",
+    "database": "db",
     "synchronize": true,
     "logging": false,
     "ssl": true,
     "extra": {
       "ssl": {
-        "rejectUnauthorized": false
+        "rejectUnauthorized": true
       }
     }
   }
